@@ -1,0 +1,2481 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Breuken – Rekenen bovenbouw</title>
+
+  <style>
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:system-ui,sans-serif;
+      background:#f4f6ff;
+      margin:0;
+      min-height:100vh;
+      padding:20px;
+      color:#111827;
+    }
+
+    .app{
+      width:min(900px,100%);
+      margin:0 auto;
+      background:#fff;
+      border-radius:1.6rem;
+      box-shadow:0 10px 30px rgba(0,0,0,.1);
+      padding:1.5rem;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    h1{
+      margin:0;
+      font-size:2rem;
+    }
+
+    .sub{
+      margin:.25rem 0 0;
+      color:#64748b;
+    }
+
+    .top-right{
+      display:flex;
+      gap:.45rem;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .pill{
+      display:inline-block;
+      padding:.4rem .75rem;
+      border-radius:999px;
+      background:#eef2ff;
+      font-weight:800;
+      font-size:.9rem;
+    }
+
+    .status{
+      margin-top:.45rem;
+      color:#64748b;
+      font-size:.88rem;
+    }
+
+    .overview{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:.8rem;
+      margin:1.2rem 0;
+    }
+
+    .info-card{
+      border:1px solid #e5e7ff;
+      background:#f8f9ff;
+      border-radius:1rem;
+      padding:.9rem 1rem;
+    }
+
+    .label{
+      font-size:.78rem;
+      color:#64748b;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      font-weight:800;
+    }
+
+    .value{
+      margin-top:.25rem;
+      font-weight:900;
+      line-height:1.3;
+    }
+
+    .stars{
+      font-size:1.35rem;
+      color:#f59e0b;
+      letter-spacing:.08em;
+    }
+
+    .panel{
+      border:1px solid #e5e7ff;
+      background:#fbfcff;
+      border-radius:1.25rem;
+      padding:1.25rem;
+      margin-top:1rem;
+    }
+
+    .panel h2{
+      margin:0 0 .45rem;
+      font-size:1.35rem;
+    }
+
+    .panel p{
+      line-height:1.55;
+    }
+
+    .rules{
+      background:#eef2ff;
+      border-radius:1rem;
+      padding:.9rem 1rem;
+      color:#3730a3;
+      font-weight:650;
+      line-height:1.5;
+    }
+
+    .row{
+      display:flex;
+      gap:.7rem;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      border-radius:999px;
+      padding:.85rem 1.2rem;
+      font-size:1rem;
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      text-align:center;
+    }
+
+    .btn:disabled{
+      cursor:default;
+      opacity:.55;
+    }
+
+    .primary{
+      background:#4f46e5;
+      color:#fff;
+    }
+
+    .primary:hover:not(:disabled){
+      background:#4338ca;
+    }
+
+    .secondary{
+      background:#e2e8f0;
+      color:#0f172a;
+    }
+
+    .secondary:hover:not(:disabled){
+      background:#cbd5e1;
+    }
+
+    .link{
+      color:#4f46e5;
+      font-weight:850;
+      text-decoration:none;
+    }
+
+    .link:hover{
+      text-decoration:underline;
+    }
+
+    .game-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    .progress-track{
+      height:12px;
+      background:#e2e8f0;
+      border-radius:999px;
+      overflow:hidden;
+      margin:1rem 0;
+    }
+
+    .progress-fill{
+      height:100%;
+      width:0;
+      background:#4f46e5;
+      transition:width .25s ease;
+    }
+
+    .question-wrap{
+      min-height:175px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:1rem;
+    }
+
+    .question{
+      font-size:clamp(2rem,7vw,3.5rem);
+      font-weight:850;
+      line-height:1.35;
+    }
+
+    .fraction{
+      display:inline-grid;
+      grid-template-rows:auto auto;
+      vertical-align:middle;
+      text-align:center;
+      line-height:1.05;
+      margin:0 .12em;
+      min-width:1.2em;
+    }
+
+    .fraction .top-number{
+      border-bottom:2px solid currentColor;
+      padding:0 .12em .06em;
+    }
+
+    .fraction .bottom-number{
+      padding:.06em .12em 0;
+    }
+
+    .mixed{
+      white-space:nowrap;
+    }
+
+    .answer-area{
+      display:flex;
+      justify-content:center;
+      gap:.7rem;
+      flex-wrap:wrap;
+      margin-top:.35rem;
+    }
+
+    input.answer{
+      width:min(300px,100%);
+      font-size:1.35rem;
+      padding:.85rem 1rem;
+      border:2px solid #c7d2fe;
+      border-radius:1rem;
+      outline:none;
+      text-align:center;
+    }
+
+    input.answer:focus{
+      border-color:#4f46e5;
+      box-shadow:0 0 0 4px rgba(79,70,229,.14);
+    }
+
+    .feedback{
+      min-height:2rem;
+      margin-top:.9rem;
+      text-align:center;
+      font-weight:850;
+      font-size:1.05rem;
+    }
+
+    .good{
+      color:#15803d;
+    }
+
+    .wrong{
+      color:#b91c1c;
+    }
+
+    .hint{
+      color:#475569;
+    }
+
+    .result-score{
+      font-size:3rem;
+      font-weight:950;
+      margin:.35rem 0;
+    }
+
+    .hidden{
+      display:none !important;
+    }
+
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      flex-wrap:wrap;
+      margin-top:1.2rem;
+      padding-top:1rem;
+      border-top:1px solid #eef2ff;
+    }
+
+    @media(max-width:600px){
+      body{
+        padding:10px;
+      }
+
+      .app{
+        padding:1rem;
+        border-radius:1.2rem;
+      }
+
+      h1{
+        font-size:1.6rem;
+      }
+
+      .panel{
+        padding:1rem;
+      }
+
+      .question-wrap{
+        min-height:145px;
+        padding:.5rem;
+      }
+
+      .answer-area .btn{
+        width:100%;
+      }
+
+      input.answer{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+
+    <div class="top">
+      <div>
+        <h1>Breuken</h1>
+        <div class="sub" id="levelSubtitle">
+          Niveau laden…
+        </div>
+        <div class="status" id="sheetStatus">
+          Sheets: verbinden…
+        </div>
+      </div>
+
+      <div class="top-right">
+        <span class="pill" id="who">
+          Leerling: —
+        </span>
+
+        <span class="pill" id="whichClass">
+          Klas: —
+        </span>
+      </div>
+    </div>
+
+    <section class="overview">
+      <div class="info-card">
+        <div class="label">Huidig niveau</div>
+        <div class="value" id="levelValue">—</div>
+      </div>
+
+      <div class="info-card">
+        <div class="label">Behaalde rondes</div>
+        <div class="value stars" id="starsValue">☆☆☆</div>
+      </div>
+
+      <div class="info-card">
+        <div class="label">Laatste pogingen</div>
+        <div class="value" id="attemptsValue">
+          Nog niet gespeeld
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="introPanel">
+      <h2 id="introTitle">Even laden…</h2>
+
+      <p id="introText"></p>
+
+      <div class="rules">
+        Een ronde heeft 10 opgaven. Met 9 of 10 goede antwoorden
+        behaal je een ronde. Drie behaalde rondes binnen je laatste
+        vijf pogingen openen het volgende niveau.
+      </div>
+
+      <p>
+        <b>Antwoorden:</b> typ een breuk als
+        <code>3/4</code> en een gemengd getal als
+        <code>1 2/3</code>.
+      </p>
+
+      <div class="row">
+        <button
+          class="btn primary"
+          id="startBtn"
+          type="button"
+          disabled
+        >
+          Gegevens laden…
+        </button>
+
+        <a class="btn secondary" href="menu.html">
+          Terug naar menu
+        </a>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="gamePanel">
+      <div class="game-head">
+        <b id="questionCounter">Opgave 1 van 10</b>
+        <b id="scoreCounter">0 goed</b>
+      </div>
+
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="rules" id="instructionBox"></div>
+
+      <div class="question-wrap">
+        <div class="question" id="questionBox"></div>
+      </div>
+
+      <div class="answer-area">
+        <input
+          class="answer"
+          id="answerInput"
+          type="text"
+          inputmode="text"
+          autocomplete="off"
+          placeholder="Jouw antwoord"
+        >
+
+        <button
+          class="btn primary"
+          id="actionBtn"
+          type="button"
+        >
+          Controleer
+        </button>
+      </div>
+
+      <div
+        class="feedback"
+        id="feedback"
+        aria-live="polite"
+      ></div>
+    </section>
+
+    <section class="panel hidden" id="resultPanel">
+      <h2 id="resultTitle">Ronde klaar</h2>
+
+      <div class="result-score" id="resultScore">
+        0/10
+      </div>
+
+      <p id="resultText"></p>
+
+      <div class="stars" id="resultStars">
+        ☆☆☆
+      </div>
+
+      <div class="status" id="saveStatus"></div>
+
+      <div class="row" style="margin-top:1rem">
+        <button
+          class="btn primary"
+          id="againBtn"
+          type="button"
+        >
+          Nog een ronde
+        </button>
+
+        <a class="btn secondary" href="menu.html">
+          Terug naar menu
+        </a>
+      </div>
+    </section>
+
+    <div class="footer">
+      <a class="link" href="menu.html">
+        ← Rekenen bovenbouw
+      </a>
+
+      <span class="status">
+        Minimaal 90% goed = ronde behaald
+      </span>
+    </div>
+
+  </main>
+
+<script>
+const SHEETS_EXEC_URL =
+  "https://script.google.com/macros/s/AKfycbyqp-Dl5JSdeCvL1qti_cbjwoKUmuXTc3FnKSwQnhvArEHbO_Df7mH30RWaT6uov3E/exec";
+
+const STORAGE_CURRENT =
+  "rekenen_bovenbouw_current_student_v1";
+
+const STORAGE_CLASS =
+  "rekenen_bovenbouw_current_class_v1";
+
+const STORAGE_CODE =
+  "rekenen_bovenbouw_current_code_v1";
+
+const STORAGE_DATA_PREFIX =
+  "rekenen_bovenbouw_data_v1_";
+
+const ROUND_SIZE = 10;
+const PASS_SCORE = 9;
+const PART = "breuken";
+
+const LEVELS = [
+  {
+    name: "Gelijknamige breuken optellen en aftrekken",
+    intro:
+      "Tel of trek breuken met dezelfde noemer op of af. " +
+      "Een gelijkwaardige uitkomst wordt goed gerekend.",
+    instruction:
+      "De noemers zijn gelijk. Reken de tellers uit en " +
+      "laat de noemer staan.",
+    placeholder: "bijv. 5/8"
+  },
+  {
+    name: "Breuken vereenvoudigen",
+    intro:
+      "Schrijf iedere breuk zo eenvoudig mogelijk.",
+    instruction:
+      "Deel de teller en noemer door hetzelfde getal tot " +
+      "verder vereenvoudigen niet meer kan.",
+    placeholder: "bijv. 2/3"
+  },
+  {
+    name: "Onechte breuk naar gemengd getal",
+    intro:
+      "Zet een onechte breuk om naar een gemengd getal.",
+    instruction:
+      "Typ het hele getal, een spatie en daarna de breuk, " +
+      "bijvoorbeeld 2 3/4.",
+    placeholder: "bijv. 2 3/4"
+  },
+  {
+    name: "Optellen en aftrekken met gemengde getallen",
+    intro:
+      "Reken met gemengde getallen en gelijknamige breuken.",
+    instruction:
+      "Geef je antwoord zo eenvoudig mogelijk. Een gemengd " +
+      "getal typ je als 1 2/5.",
+    placeholder: "bijv. 1 2/5"
+  },
+  {
+    name: "Een eenvoudige breuk van een getal",
+    intro:
+      "Bereken een stambreuk, zoals 1/4, van een heel getal.",
+    instruction:
+      "Deel het getal door de noemer.",
+    placeholder: "heel getal"
+  },
+  {
+    name: "Breuk van een getal",
+    intro:
+      "Bereken een breuk met een teller groter dan 1 van " +
+      "een heel getal.",
+    instruction:
+      "Deel eerst door de noemer en vermenigvuldig daarna " +
+      "met de teller.",
+    placeholder: "heel getal"
+  },
+  {
+    name: "Ongelijknamige breuken optellen",
+    intro:
+      "Tel breuken met verschillende noemers bij elkaar op.",
+    instruction:
+      "Maak de breuken eerst gelijknamig en tel daarna de " +
+      "tellers op.",
+    placeholder: "bijv. 7/12"
+  },
+  {
+    name: "Ongelijknamige breuken aftrekken",
+    intro:
+      "Trek breuken met verschillende noemers van elkaar af.",
+    instruction:
+      "Maak de breuken eerst gelijknamig en trek daarna de " +
+      "tellers af.",
+    placeholder: "bijv. 5/12"
+  },
+  {
+    name: "Heel getal × breuk",
+    intro:
+      "Vermenigvuldig een heel getal met een breuk.",
+    instruction:
+      "Vermenigvuldig het hele getal met de teller en " +
+      "vereenvoudig de uitkomst.",
+    placeholder: "bijv. 2 2/3"
+  },
+  {
+    name: "Breuk × breuk",
+    intro:
+      "Vermenigvuldig twee breuken met elkaar.",
+    instruction:
+      "Teller × teller en noemer × noemer. Vereenvoudig daarna.",
+    placeholder: "bijv. 3/10"
+  },
+  {
+    name: "Delen door een breuk",
+    intro:
+      "Deel een heel getal of een breuk door een breuk.",
+    instruction:
+      "Delen door een breuk is vermenigvuldigen met het " +
+      "omgekeerde.",
+    placeholder: "bijv. 4 of 1 1/2"
+  }
+];
+
+const studentId =
+  (localStorage.getItem(STORAGE_CURRENT) || "").trim();
+
+const studentClass =
+  (localStorage.getItem(STORAGE_CLASS) || "").trim();
+
+const studentCode =
+  (localStorage.getItem(STORAGE_CODE) || "").trim();
+
+if(!studentId || !studentClass || !studentCode){
+  window.location.href = "index.html";
+}
+
+document.getElementById("who").textContent =
+  `Leerling: ${studentId}`;
+
+document.getElementById("whichClass").textContent =
+  `Klas: ${studentClass}`;
+
+function createDefaultData(){
+  return {
+    v: 1,
+    id: studentId,
+    klas: studentClass,
+    code: studentCode,
+
+    levels: {
+      breuken: 0,
+      kommagetallen: 0,
+      procenten: 0,
+      maten: 0
+    },
+
+    attempts: {
+      breuken: [],
+      kommagetallen: [],
+      procenten: [],
+      maten: []
+    }
+  };
+}
+
+function dataKey(){
+  return (
+    STORAGE_DATA_PREFIX +
+    studentClass +
+    "__" +
+    studentId
+  );
+}
+
+function geldigLevel(value){
+  const number = Number(value);
+
+  if(!Number.isFinite(number) || number < 0){
+    return 0;
+  }
+
+  return Math.min(
+    Math.floor(number),
+    LEVELS.length - 1
+  );
+}
+
+function normaliseerPogingen(value){
+  let list = value;
+
+  if(typeof list === "string"){
+    list =
+      list === ""
+        ? []
+        : list.split(",");
+  }
+
+  if(!Array.isArray(list)){
+    return [];
+  }
+
+  return list
+    .map(item => {
+      return (
+        item === true ||
+        item === 1 ||
+        item === "1" ||
+        item === "true"
+      );
+    })
+    .slice(-5);
+}
+
+function normaliseerData(data){
+  const result =
+    createDefaultData();
+
+  if(!data || typeof data !== "object"){
+    return result;
+  }
+
+  [
+    "breuken",
+    "kommagetallen",
+    "procenten",
+    "maten"
+  ].forEach(part => {
+    const value =
+      Number(data.levels?.[part]);
+
+    result.levels[part] =
+      Number.isFinite(value) && value >= 0
+        ? Math.floor(value)
+        : 0;
+
+    result.attempts[part] =
+      normaliseerPogingen(
+        data.attempts?.[part]
+      );
+  });
+
+  return result;
+}
+
+function getLocalData(){
+  try{
+    const raw =
+      localStorage.getItem(dataKey());
+
+    return raw
+      ? normaliseerData(JSON.parse(raw))
+      : createDefaultData();
+
+  }catch(error){
+    return createDefaultData();
+  }
+}
+
+function setLocalData(data){
+  localStorage.setItem(
+    dataKey(),
+    JSON.stringify(normaliseerData(data))
+  );
+}
+
+let jsonpSequence = 0;
+
+function jsonp(url){
+  return new Promise((resolve, reject) => {
+    const callbackName =
+      "__breukenCallback_" +
+      (++jsonpSequence) +
+      "_" +
+      Date.now();
+
+    const script =
+      document.createElement("script");
+
+    const timeout =
+      setTimeout(() => {
+        cleanup();
+
+        reject(
+          new Error("De verbinding duurde te lang.")
+        );
+      }, 12000);
+
+    function cleanup(){
+      clearTimeout(timeout);
+
+      try{
+        delete window[callbackName];
+      }catch(error){
+        // Geen actie nodig.
+      }
+
+      script.remove();
+    }
+
+    window[callbackName] = data => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+
+      reject(
+        new Error("JSONP-aanroep mislukt.")
+      );
+    };
+
+    const separator =
+      url.includes("?") ? "&" : "?";
+
+    script.src =
+      url +
+      separator +
+      "callback=" +
+      encodeURIComponent(callbackName);
+
+    document.body.appendChild(script);
+  });
+}
+
+async function sheetsGet(){
+  const url =
+    `${SHEETS_EXEC_URL}?action=get` +
+    `&klas=${encodeURIComponent(studentClass)}` +
+    `&naam=${encodeURIComponent(studentId)}` +
+    `&code=${encodeURIComponent(studentCode)}`;
+
+  return jsonp(url);
+}
+
+async function sheetsSetBreuken(data, score){
+  const attemptsText =
+    data.attempts.breuken
+      .map(Boolean)
+      .map(Number)
+      .join(",");
+
+  const url =
+    `${SHEETS_EXEC_URL}?action=set` +
+    `&klas=${encodeURIComponent(studentClass)}` +
+    `&naam=${encodeURIComponent(studentId)}` +
+    `&code=${encodeURIComponent(studentCode)}` +
+    `&breuken=${encodeURIComponent(
+      data.levels.breuken
+    )}` +
+    `&pogingenBreuken=${encodeURIComponent(
+      attemptsText
+    )}` +
+    `&onderdeel=breuken` +
+    `&score=${encodeURIComponent(score)}`;
+
+  return jsonp(url);
+}
+
+function telBehaald(attempts){
+  return Math.min(
+    3,
+    normaliseerPogingen(attempts)
+      .filter(Boolean)
+      .length
+  );
+}
+
+function sterren(attempts){
+  const count =
+    telBehaald(attempts);
+
+  return (
+    "★".repeat(count) +
+    "☆".repeat(3 - count)
+  );
+}
+
+function pogingenTekst(attempts){
+  const list =
+    normaliseerPogingen(attempts);
+
+  return list.length
+    ? list
+        .map(item => item ? "✓" : "✗")
+        .join(" ")
+    : "Nog niet gespeeld";
+}
+
+let currentData =
+  getLocalData();
+
+let ready = false;
+let questions = [];
+let questionIndex = 0;
+let correctCount = 0;
+let checked = false;
+
+function renderOverview(){
+  const level =
+    geldigLevel(
+      currentData.levels.breuken
+    );
+
+  const levelInfo =
+    LEVELS[level];
+
+  const attempts =
+    currentData.attempts.breuken;
+
+  document.getElementById(
+    "levelSubtitle"
+  ).textContent =
+    `Niveau ${level + 1}: ${levelInfo.name}`;
+
+  document.getElementById(
+    "levelValue"
+  ).textContent =
+    `${level + 1} van ${LEVELS.length}`;
+
+  document.getElementById(
+    "starsValue"
+  ).textContent =
+    sterren(attempts);
+
+  document.getElementById(
+    "attemptsValue"
+  ).textContent =
+    pogingenTekst(attempts);
+
+  document.getElementById(
+    "introTitle"
+  ).textContent =
+    `Niveau ${level + 1}: ${levelInfo.name}`;
+
+  document.getElementById(
+    "introText"
+  ).textContent =
+    levelInfo.intro;
+}
+
+async function loadData(){
+  renderOverview();
+
+  const startBtn =
+    document.getElementById("startBtn");
+
+  const status =
+    document.getElementById("sheetStatus");
+
+  try{
+    const response =
+      await sheetsGet();
+
+    if(!response || response.ok !== true){
+      throw new Error(
+        response?.error ||
+        "Onverwacht antwoord."
+      );
+    }
+
+    const received =
+      response.data || {
+        levels: response.levels,
+        attempts: response.attempts
+      };
+
+    currentData =
+      normaliseerData(received);
+
+    setLocalData(currentData);
+
+    status.textContent =
+      "Sheets: verbonden ✅";
+
+  }catch(error){
+    status.textContent =
+      "Sheets: niet bereikbaar; lokale back-up gebruikt.";
+  }
+
+  renderOverview();
+
+  ready = true;
+  startBtn.disabled = false;
+  startBtn.textContent = "Start ronde";
+}
+
+function randomInt(min, max){
+  return (
+    Math.floor(
+      Math.random() * (max - min + 1)
+    ) + min
+  );
+}
+
+function choose(array){
+  return array[
+    randomInt(0, array.length - 1)
+  ];
+}
+
+function gcd(a, b){
+  a = Math.abs(a);
+  b = Math.abs(b);
+
+  while(b){
+    const rest = a % b;
+    a = b;
+    b = rest;
+  }
+
+  return a || 1;
+}
+
+function reduceFraction(n, d){
+  if(d === 0){
+    throw new Error(
+      "Noemer mag niet nul zijn."
+    );
+  }
+
+  if(d < 0){
+    n = -n;
+    d = -d;
+  }
+
+  const divisor =
+    gcd(n, d);
+
+  return {
+    n: n / divisor,
+    d: d / divisor
+  };
+}
+
+function addFractions(a, b){
+  return reduceFraction(
+    a.n * b.d + b.n * a.d,
+    a.d * b.d
+  );
+}
+
+function subtractFractions(a, b){
+  return reduceFraction(
+    a.n * b.d - b.n * a.d,
+    a.d * b.d
+  );
+}
+
+function multiplyFractions(a, b){
+  return reduceFraction(
+    a.n * b.n,
+    a.d * b.d
+  );
+}
+
+function divideFractions(a, b){
+  if(b.n === 0){
+    throw new Error(
+      "Delen door nul kan niet."
+    );
+  }
+
+  return reduceFraction(
+    a.n * b.d,
+    a.d * b.n
+  );
+}
+
+function equalFractions(a, b){
+  return (
+    a.n * b.d ===
+    b.n * a.d
+  );
+}
+
+function fractionHtmlRaw(n, d){
+  return (
+    `<span class="fraction">` +
+      `<span class="top-number">${n}</span>` +
+      `<span class="bottom-number">${d}</span>` +
+    `</span>`
+  );
+}
+
+function numberHtml(n, d, mixed = true){
+  const fraction =
+    reduceFraction(n, d);
+
+  const sign =
+    fraction.n < 0 ? "−" : "";
+
+  const absN =
+    Math.abs(fraction.n);
+
+  if(fraction.d === 1){
+    return sign + String(absN);
+  }
+
+  if(mixed && absN > fraction.d){
+    const whole =
+      Math.floor(absN / fraction.d);
+
+    const remainder =
+      absN % fraction.d;
+
+    if(remainder === 0){
+      return sign + String(whole);
+    }
+
+    return (
+      `<span class="mixed">` +
+        `${sign}${whole} ` +
+        `${fractionHtmlRaw(
+          remainder,
+          fraction.d
+        )}` +
+      `</span>`
+    );
+  }
+
+  return (
+    sign +
+    fractionHtmlRaw(
+      absN,
+      fraction.d
+    )
+  );
+}
+
+function fractionText(n, d, mixed = true){
+  const fraction =
+    reduceFraction(n, d);
+
+  const sign =
+    fraction.n < 0 ? "-" : "";
+
+  const absN =
+    Math.abs(fraction.n);
+
+  if(fraction.d === 1){
+    return sign + String(absN);
+  }
+
+  if(mixed && absN > fraction.d){
+    const whole =
+      Math.floor(absN / fraction.d);
+
+    const remainder =
+      absN % fraction.d;
+
+    return remainder
+      ? `${sign}${whole} ${remainder}/${fraction.d}`
+      : sign + String(whole);
+  }
+
+  return `${sign}${absN}/${fraction.d}`;
+}
+
+function parseAnswer(raw){
+  const text =
+    String(raw || "")
+      .trim()
+      .replace(/−/g, "-")
+      .replace(/\s+/g, " ");
+
+  if(!text){
+    return null;
+  }
+
+  let match =
+    text.match(
+      /^(-?\d+)\s+(\d+)\s*\/\s*(\d+)$/
+    );
+
+  if(match){
+    const whole =
+      Number(match[1]);
+
+    const partN =
+      Number(match[2]);
+
+    const partD =
+      Number(match[3]);
+
+    if(!partD || partN >= partD){
+      return null;
+    }
+
+    const sign =
+      whole < 0 ? -1 : 1;
+
+    const totalN =
+      sign * (
+        Math.abs(whole) * partD +
+        partN
+      );
+
+    return {
+      ...reduceFraction(totalN, partD),
+      kind: "mixed",
+      rawWhole: whole,
+      rawPartN: partN,
+      rawPartD: partD,
+      fullyReduced:
+        gcd(partN, partD) === 1
+    };
+  }
+
+  match =
+    text.match(
+      /^(-?\d+)\s*\/\s*(-?\d+)$/
+    );
+
+  if(match){
+    const rawN =
+      Number(match[1]);
+
+    const rawD =
+      Number(match[2]);
+
+    if(!rawD){
+      return null;
+    }
+
+    const reduced =
+      reduceFraction(rawN, rawD);
+
+    return {
+      ...reduced,
+      kind: "fraction",
+      rawN: rawN,
+      rawD: rawD,
+      fullyReduced:
+        gcd(rawN, rawD) === 1
+    };
+  }
+
+  if(/^-?\d+$/.test(text)){
+    const number =
+      Number(text);
+
+    return {
+      n: number,
+      d: 1,
+      kind: "integer",
+      fullyReduced: true
+    };
+  }
+
+  return null;
+}
+
+function randomReducedNumerator(
+  denominator,
+  min = 1
+){
+  const choices = [];
+
+  for(
+    let numerator = min;
+    numerator < denominator;
+    numerator++
+  ){
+    if(
+      gcd(numerator, denominator) === 1
+    ){
+      choices.push(numerator);
+    }
+  }
+
+  return choose(
+    choices.length
+      ? choices
+      : [1]
+  );
+}
+
+function problem(
+  questionHtml,
+  expected,
+  rule,
+  answerText,
+  key
+){
+  return {
+    questionHtml: questionHtml,
+
+    expected:
+      reduceFraction(
+        expected.n,
+        expected.d
+      ),
+
+    rule: rule,
+    answerText: answerText,
+    key: key
+  };
+}
+
+function generateLevel1(){
+  const denominator =
+    randomInt(3, 12);
+
+  if(Math.random() < .5){
+    const first =
+      randomInt(
+        1,
+        denominator - 2
+      );
+
+    const second =
+      randomInt(
+        1,
+        denominator - first
+      );
+
+    const expected = {
+      n: first + second,
+      d: denominator
+    };
+
+    return problem(
+      `${fractionHtmlRaw(
+        first,
+        denominator
+      )} + ${fractionHtmlRaw(
+        second,
+        denominator
+      )} =`,
+
+      expected,
+      "equivalent",
+
+      fractionText(
+        expected.n,
+        expected.d
+      ),
+
+      `1+${first}/${denominator}+${second}/${denominator}`
+    );
+  }
+
+  const first =
+    randomInt(
+      2,
+      denominator - 1
+    );
+
+  const second =
+    randomInt(
+      1,
+      first - 1
+    );
+
+  const expected = {
+    n: first - second,
+    d: denominator
+  };
+
+  return problem(
+    `${fractionHtmlRaw(
+      first,
+      denominator
+    )} − ${fractionHtmlRaw(
+      second,
+      denominator
+    )} =`,
+
+    expected,
+    "equivalent",
+
+    fractionText(
+      expected.n,
+      expected.d
+    ),
+
+    `1-${first}/${denominator}-${second}/${denominator}`
+  );
+}
+
+function generateLevel2(){
+  const denominator =
+    randomInt(3, 12);
+
+  const numerator =
+    randomReducedNumerator(
+      denominator
+    );
+
+  const factor =
+    randomInt(2, 6);
+
+  return problem(
+    `${fractionHtmlRaw(
+      numerator * factor,
+      denominator * factor
+    )} =`,
+
+    {
+      n: numerator,
+      d: denominator
+    },
+
+    "simplified",
+    `${numerator}/${denominator}`,
+
+    `2-${numerator * factor}/${denominator * factor}`
+  );
+}
+
+function generateLevel3(){
+  const denominator =
+    randomInt(2, 10);
+
+  const whole =
+    randomInt(1, 5);
+
+  const remainder =
+    randomReducedNumerator(
+      denominator
+    );
+
+  const numerator =
+    whole * denominator +
+    remainder;
+
+  return problem(
+    `${fractionHtmlRaw(
+      numerator,
+      denominator
+    )} =`,
+
+    {
+      n: numerator,
+      d: denominator
+    },
+
+    "mixed",
+    `${whole} ${remainder}/${denominator}`,
+
+    `3-${numerator}/${denominator}`
+  );
+}
+
+function generateLevel4(){
+  const denominator =
+    randomInt(3, 10);
+
+  if(Math.random() < .55){
+    const first =
+      randomInt(
+        denominator + 1,
+        3 * denominator - 1
+      );
+
+    const second =
+      Math.random() < .7
+        ? randomInt(
+            1,
+            denominator - 1
+          )
+        : randomInt(
+            denominator + 1,
+            2 * denominator - 1
+          );
+
+    const total =
+      first + second;
+
+    if(
+      first % denominator === 0 ||
+      total % denominator === 0
+    ){
+      return generateLevel4();
+    }
+
+    return problem(
+      `${numberHtml(
+        first,
+        denominator,
+        true
+      )} + ${numberHtml(
+        second,
+        denominator,
+        true
+      )} =`,
+
+      {
+        n: total,
+        d: denominator
+      },
+
+      "equivalent",
+
+      fractionText(
+        total,
+        denominator,
+        true
+      ),
+
+      `4+${first}/${denominator}+${second}/${denominator}`
+    );
+  }
+
+  const first =
+    randomInt(
+      denominator + 2,
+      4 * denominator - 1
+    );
+
+  const second =
+    randomInt(
+      1,
+      Math.min(
+        first - 1,
+        2 * denominator - 1
+      )
+    );
+
+  const total =
+    first - second;
+
+  if(
+    first % denominator === 0 ||
+    total <= 0 ||
+    total % denominator === 0
+  ){
+    return generateLevel4();
+  }
+
+  return problem(
+    `${numberHtml(
+      first,
+      denominator,
+      true
+    )} − ${numberHtml(
+      second,
+      denominator,
+      true
+    )} =`,
+
+    {
+      n: total,
+      d: denominator
+    },
+
+    "equivalent",
+
+    fractionText(
+      total,
+      denominator,
+      true
+    ),
+
+    `4-${first}/${denominator}-${second}/${denominator}`
+  );
+}
+
+function generateLevel5(){
+  const denominator =
+    choose([2,3,4,5,8,10]);
+
+  const answer =
+    randomInt(2, 12);
+
+  const amount =
+    denominator * answer;
+
+  return problem(
+    `${fractionHtmlRaw(
+      1,
+      denominator
+    )} van ${amount} =`,
+
+    {
+      n: answer,
+      d: 1
+    },
+
+    "integer",
+    String(answer),
+
+    `5-${denominator}-${amount}`
+  );
+}
+
+function generateLevel6(){
+  const denominator =
+    randomInt(3, 10);
+
+  const numerator =
+    randomReducedNumerator(
+      denominator,
+      2
+    );
+
+  if(numerator === 1){
+    return generateLevel6();
+  }
+
+  const unit =
+    randomInt(2, 10);
+
+  const amount =
+    denominator * unit;
+
+  const answer =
+    numerator * unit;
+
+  return problem(
+    `${fractionHtmlRaw(
+      numerator,
+      denominator
+    )} van ${amount} =`,
+
+    {
+      n: answer,
+      d: 1
+    },
+
+    "integer",
+    String(answer),
+
+    `6-${numerator}/${denominator}-${amount}`
+  );
+}
+
+const FRIENDLY_PAIRS = [
+  [2,3],
+  [2,5],
+  [3,4],
+  [3,5],
+  [3,6],
+  [4,5],
+  [4,6],
+  [4,8],
+  [5,6],
+  [5,8],
+  [5,10],
+  [6,8],
+  [6,9],
+  [8,12]
+];
+
+function generateLevel7(){
+  const pair =
+    choose(FRIENDLY_PAIRS);
+
+  const denominator1 =
+    pair[0];
+
+  const denominator2 =
+    pair[1];
+
+  const numerator1 =
+    randomReducedNumerator(
+      denominator1
+    );
+
+  const numerator2 =
+    randomReducedNumerator(
+      denominator2
+    );
+
+  const expected =
+    addFractions(
+      {
+        n: numerator1,
+        d: denominator1
+      },
+      {
+        n: numerator2,
+        d: denominator2
+      }
+    );
+
+  return problem(
+    `${fractionHtmlRaw(
+      numerator1,
+      denominator1
+    )} + ${fractionHtmlRaw(
+      numerator2,
+      denominator2
+    )} =`,
+
+    expected,
+    "equivalent",
+
+    fractionText(
+      expected.n,
+      expected.d,
+      true
+    ),
+
+    `7-${numerator1}/${denominator1}+${numerator2}/${denominator2}`
+  );
+}
+
+function generateLevel8(){
+  const pair =
+    choose(FRIENDLY_PAIRS);
+
+  const denominator1 =
+    pair[0];
+
+  const denominator2 =
+    pair[1];
+
+  let first = {
+    n:
+      randomReducedNumerator(
+        denominator1
+      ),
+    d: denominator1
+  };
+
+  let second = {
+    n:
+      randomReducedNumerator(
+        denominator2
+      ),
+    d: denominator2
+  };
+
+  const compare =
+    first.n * second.d -
+    second.n * first.d;
+
+  if(compare === 0){
+    return generateLevel8();
+  }
+
+  if(compare < 0){
+    const temporary = first;
+    first = second;
+    second = temporary;
+  }
+
+  const expected =
+    subtractFractions(
+      first,
+      second
+    );
+
+  return problem(
+    `${fractionHtmlRaw(
+      first.n,
+      first.d
+    )} − ${fractionHtmlRaw(
+      second.n,
+      second.d
+    )} =`,
+
+    expected,
+    "equivalent",
+
+    fractionText(
+      expected.n,
+      expected.d,
+      true
+    ),
+
+    `8-${first.n}/${first.d}-${second.n}/${second.d}`
+  );
+}
+
+function generateLevel9(){
+  const whole =
+    randomInt(2, 10);
+
+  const denominator =
+    randomInt(2, 10);
+
+  const numerator =
+    randomReducedNumerator(
+      denominator
+    );
+
+  const expected =
+    multiplyFractions(
+      {
+        n: whole,
+        d: 1
+      },
+      {
+        n: numerator,
+        d: denominator
+      }
+    );
+
+  return problem(
+    `${whole} × ${fractionHtmlRaw(
+      numerator,
+      denominator
+    )} =`,
+
+    expected,
+    "equivalent",
+
+    fractionText(
+      expected.n,
+      expected.d,
+      true
+    ),
+
+    `9-${whole}x${numerator}/${denominator}`
+  );
+}
+
+function generateLevel10(){
+  const denominator1 =
+    randomInt(2, 10);
+
+  const denominator2 =
+    randomInt(2, 10);
+
+  const numerator1 =
+    randomReducedNumerator(
+      denominator1
+    );
+
+  const numerator2 =
+    randomReducedNumerator(
+      denominator2
+    );
+
+  const expected =
+    multiplyFractions(
+      {
+        n: numerator1,
+        d: denominator1
+      },
+      {
+        n: numerator2,
+        d: denominator2
+      }
+    );
+
+  return problem(
+    `${fractionHtmlRaw(
+      numerator1,
+      denominator1
+    )} × ${fractionHtmlRaw(
+      numerator2,
+      denominator2
+    )} =`,
+
+    expected,
+    "equivalent",
+
+    fractionText(
+      expected.n,
+      expected.d,
+      true
+    ),
+
+    `10-${numerator1}/${denominator1}x${numerator2}/${denominator2}`
+  );
+}
+
+function generateLevel11(){
+  for(
+    let tries = 0;
+    tries < 100;
+    tries++
+  ){
+    if(Math.random() < .55){
+      const whole =
+        randomInt(2, 10);
+
+      const denominator =
+        randomInt(2, 10);
+
+      const numerator =
+        randomReducedNumerator(
+          denominator
+        );
+
+      const expected =
+        divideFractions(
+          {
+            n: whole,
+            d: 1
+          },
+          {
+            n: numerator,
+            d: denominator
+          }
+        );
+
+      if(
+        Math.abs(expected.n) <= 40 &&
+        expected.d <= 12
+      ){
+        return problem(
+          `${whole} : ${fractionHtmlRaw(
+            numerator,
+            denominator
+          )} =`,
+
+          expected,
+          "equivalent",
+
+          fractionText(
+            expected.n,
+            expected.d,
+            true
+          ),
+
+          `11-${whole}:${numerator}/${denominator}`
+        );
+      }
+
+    }else{
+      const denominator1 =
+        randomInt(2, 10);
+
+      const denominator2 =
+        randomInt(2, 10);
+
+      const numerator1 =
+        randomReducedNumerator(
+          denominator1
+        );
+
+      const numerator2 =
+        randomReducedNumerator(
+          denominator2
+        );
+
+      const expected =
+        divideFractions(
+          {
+            n: numerator1,
+            d: denominator1
+          },
+          {
+            n: numerator2,
+            d: denominator2
+          }
+        );
+
+      if(
+        Math.abs(expected.n) <= 40 &&
+        expected.d <= 12
+      ){
+        return problem(
+          `${fractionHtmlRaw(
+            numerator1,
+            denominator1
+          )} : ${fractionHtmlRaw(
+            numerator2,
+            denominator2
+          )} =`,
+
+          expected,
+          "equivalent",
+
+          fractionText(
+            expected.n,
+            expected.d,
+            true
+          ),
+
+          `11-${numerator1}/${denominator1}:${numerator2}/${denominator2}`
+        );
+      }
+    }
+  }
+
+  return problem(
+    `3 : ${fractionHtmlRaw(3,4)} =`,
+
+    {
+      n: 4,
+      d: 1
+    },
+
+    "equivalent",
+    "4",
+    "11-fallback"
+  );
+}
+
+function generateProblem(level){
+  switch(level){
+    case 0:
+      return generateLevel1();
+
+    case 1:
+      return generateLevel2();
+
+    case 2:
+      return generateLevel3();
+
+    case 3:
+      return generateLevel4();
+
+    case 4:
+      return generateLevel5();
+
+    case 5:
+      return generateLevel6();
+
+    case 6:
+      return generateLevel7();
+
+    case 7:
+      return generateLevel8();
+
+    case 8:
+      return generateLevel9();
+
+    case 9:
+      return generateLevel10();
+
+    default:
+      return generateLevel11();
+  }
+}
+
+function buildRound(level){
+  const list = [];
+  const keys = new Set();
+
+  let guard = 0;
+
+  while(
+    list.length < ROUND_SIZE &&
+    guard < 300
+  ){
+    guard++;
+
+    const item =
+      generateProblem(level);
+
+    if(!keys.has(item.key)){
+      keys.add(item.key);
+      list.push(item);
+    }
+  }
+
+  while(list.length < ROUND_SIZE){
+    list.push(
+      generateProblem(level)
+    );
+  }
+
+  return list;
+}
+
+function validateAnswer(item, raw){
+  const parsed =
+    parseAnswer(raw);
+
+  if(!parsed){
+    return {
+      valid: false,
+      correct: false,
+
+      message:
+        "Typ een heel getal, een breuk zoals 3/4 " +
+        "of een gemengd getal zoals 1 2/3."
+    };
+  }
+
+  if(
+    !equalFractions(
+      parsed,
+      item.expected
+    )
+  ){
+    return {
+      valid: true,
+      correct: false
+    };
+  }
+
+  if(
+    item.rule === "integer" &&
+    parsed.kind !== "integer"
+  ){
+    return {
+      valid: true,
+      correct: false
+    };
+  }
+
+  if(item.rule === "simplified"){
+    if(
+      parsed.kind !== "fraction" ||
+      !parsed.fullyReduced ||
+      Math.abs(parsed.rawN) >=
+        Math.abs(parsed.rawD)
+    ){
+      return {
+        valid: true,
+        correct: false,
+
+        message:
+          "De waarde klopt, maar de breuk is nog " +
+          "niet volledig vereenvoudigd."
+      };
+    }
+  }
+
+  if(item.rule === "mixed"){
+    if(
+      parsed.kind !== "mixed" ||
+      !parsed.fullyReduced
+    ){
+      return {
+        valid: true,
+        correct: false,
+
+        message:
+          "De waarde klopt, maar schrijf het antwoord " +
+          "als vereenvoudigd gemengd getal."
+      };
+    }
+  }
+
+  return {
+    valid: true,
+    correct: true
+  };
+}
+
+function startRound(){
+  if(!ready){
+    return;
+  }
+
+  const level =
+    geldigLevel(
+      currentData.levels.breuken
+    );
+
+  questions =
+    buildRound(level);
+
+  questionIndex = 0;
+  correctCount = 0;
+  checked = false;
+
+  document
+    .getElementById("introPanel")
+    .classList.add("hidden");
+
+  document
+    .getElementById("resultPanel")
+    .classList.add("hidden");
+
+  document
+    .getElementById("gamePanel")
+    .classList.remove("hidden");
+
+  document.getElementById(
+    "instructionBox"
+  ).textContent =
+    LEVELS[level].instruction;
+
+  showQuestion();
+}
+
+function showQuestion(){
+  const item =
+    questions[questionIndex];
+
+  checked = false;
+
+  document.getElementById(
+    "questionCounter"
+  ).textContent =
+    `Opgave ${questionIndex + 1} van ${ROUND_SIZE}`;
+
+  document.getElementById(
+    "scoreCounter"
+  ).textContent =
+    `${correctCount} goed`;
+
+  document.getElementById(
+    "progressFill"
+  ).style.width =
+    `${(questionIndex / ROUND_SIZE) * 100}%`;
+
+  document.getElementById(
+    "questionBox"
+  ).innerHTML =
+    item.questionHtml;
+
+  document.getElementById(
+    "feedback"
+  ).textContent = "";
+
+  document.getElementById(
+    "feedback"
+  ).className =
+    "feedback";
+
+  const answerInput =
+    document.getElementById("answerInput");
+
+  answerInput.value = "";
+  answerInput.disabled = false;
+
+  answerInput.placeholder =
+    LEVELS[
+      geldigLevel(
+        currentData.levels.breuken
+      )
+    ].placeholder;
+
+  document.getElementById(
+    "actionBtn"
+  ).textContent =
+    "Controleer";
+
+  answerInput.focus();
+}
+
+function handleAction(){
+  if(checked){
+    questionIndex++;
+
+    if(questionIndex >= ROUND_SIZE){
+      finishRound();
+    }else{
+      showQuestion();
+    }
+
+    return;
+  }
+
+  const item =
+    questions[questionIndex];
+
+  const input =
+    document.getElementById("answerInput");
+
+  const feedback =
+    document.getElementById("feedback");
+
+  const result =
+    validateAnswer(
+      item,
+      input.value
+    );
+
+  if(!result.valid){
+    feedback.textContent =
+      result.message;
+
+    feedback.className =
+      "feedback hint";
+
+    input.focus();
+    return;
+  }
+
+  checked = true;
+  input.disabled = true;
+
+  if(result.correct){
+    correctCount++;
+
+    feedback.textContent =
+      "Goed!";
+
+    feedback.className =
+      "feedback good";
+
+  }else{
+    feedback.textContent =
+      (
+        result.message
+          ? result.message + " "
+          : "Niet goed. "
+      ) +
+      `Het juiste antwoord is ${item.answerText}.`;
+
+    feedback.className =
+      "feedback wrong";
+  }
+
+  document.getElementById(
+    "scoreCounter"
+  ).textContent =
+    `${correctCount} goed`;
+
+  document.getElementById(
+    "progressFill"
+  ).style.width =
+    `${((questionIndex + 1) / ROUND_SIZE) * 100}%`;
+
+  document.getElementById(
+    "actionBtn"
+  ).textContent =
+    questionIndex === ROUND_SIZE - 1
+      ? "Bekijk resultaat"
+      : "Volgende";
+}
+
+async function finishRound(){
+  document
+    .getElementById("gamePanel")
+    .classList.add("hidden");
+
+  document
+    .getElementById("resultPanel")
+    .classList.remove("hidden");
+
+  const passed =
+    correctCount >= PASS_SCORE;
+
+  const percentage =
+    Math.round(
+      (correctCount / ROUND_SIZE) * 100
+    );
+
+  const oldLevel =
+    geldigLevel(
+      currentData.levels.breuken
+    );
+
+  let attempts = [
+    ...currentData.attempts.breuken,
+    passed
+  ].slice(-5);
+
+  let advanced = false;
+  let completed = false;
+
+  if(telBehaald(attempts) >= 3){
+    if(oldLevel < LEVELS.length - 1){
+      currentData.levels.breuken =
+        oldLevel + 1;
+
+      attempts = [];
+      advanced = true;
+
+    }else{
+      completed = true;
+    }
+  }
+
+  currentData.attempts.breuken =
+    attempts;
+
+  setLocalData(currentData);
+  renderOverview();
+
+  document.getElementById(
+    "resultScore"
+  ).textContent =
+    `${correctCount}/${ROUND_SIZE}`;
+
+  document.getElementById(
+    "resultStars"
+  ).textContent =
+    sterren(attempts);
+
+  if(advanced){
+    document.getElementById(
+      "resultTitle"
+    ).textContent =
+      "Niveau behaald! 🎉";
+
+    document.getElementById(
+      "resultText"
+    ).textContent =
+      `Je had ${correctCount} van de ${ROUND_SIZE} goed. ` +
+      `Je gaat verder met niveau ${oldLevel + 2}: ` +
+      `${LEVELS[oldLevel + 1].name}.`;
+
+  }else if(completed){
+    document.getElementById(
+      "resultTitle"
+    ).textContent =
+      "Alle breukenniveaus behaald! 🎉";
+
+    document.getElementById(
+      "resultText"
+    ).textContent =
+      `Je had ${correctCount} van de ${ROUND_SIZE} goed ` +
+      `en hebt alle niveaus afgerond.`;
+
+  }else if(passed){
+    document.getElementById(
+      "resultTitle"
+    ).textContent =
+      "Ronde behaald! ✅";
+
+    document.getElementById(
+      "resultText"
+    ).textContent =
+      `Je had ${correctCount} van de ${ROUND_SIZE} goed. ` +
+      `Deze ronde telt mee voor je drie behaalde rondes.`;
+
+  }else{
+    document.getElementById(
+      "resultTitle"
+    ).textContent =
+      "Blijf oefenen";
+
+    document.getElementById(
+      "resultText"
+    ).textContent =
+      `Je had ${correctCount} van de ${ROUND_SIZE} goed. ` +
+      `Voor een behaalde ronde heb je minimaal ` +
+      `${PASS_SCORE} goede antwoorden nodig.`;
+  }
+
+  const saveStatus =
+    document.getElementById("saveStatus");
+
+  saveStatus.textContent =
+    "Voortgang opslaan…";
+
+  try{
+    const response =
+      await sheetsSetBreuken(
+        currentData,
+        percentage
+      );
+
+    if(!response || response.ok !== true){
+      throw new Error(
+        response?.error ||
+        "Opslaan mislukt."
+      );
+    }
+
+    saveStatus.textContent =
+      "Voortgang opgeslagen in Google Sheets ✅";
+
+  }catch(error){
+    saveStatus.textContent =
+      "Google Sheets was niet bereikbaar. " +
+      "De voortgang staat wel lokaal opgeslagen.";
+  }
+}
+
+document
+  .getElementById("startBtn")
+  .addEventListener(
+    "click",
+    startRound
+  );
+
+document
+  .getElementById("againBtn")
+  .addEventListener(
+    "click",
+    startRound
+  );
+
+document
+  .getElementById("actionBtn")
+  .addEventListener(
+    "click",
+    handleAction
+  );
+
+document
+  .getElementById("answerInput")
+  .addEventListener(
+    "keydown",
+    event => {
+      if(event.key === "Enter"){
+        handleAction();
+      }
+    }
+  );
+
+loadData();
+</script>
+</body>
+</html>
