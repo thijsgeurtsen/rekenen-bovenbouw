@@ -1,0 +1,3386 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Maten en formules – Rekenen bovenbouw</title>
+
+  <style>
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:system-ui,sans-serif;
+      background:#f4f6ff;
+      margin:0;
+      min-height:100vh;
+      padding:20px;
+      color:#111827;
+    }
+
+    .app{
+      width:min(940px,100%);
+      margin:auto;
+      background:#fff;
+      border-radius:1.6rem;
+      box-shadow:0 10px 30px rgba(0,0,0,.1);
+      padding:1.5rem;
+    }
+
+    .top,
+    .game-head,
+    .footer,
+    .row{
+      display:flex;
+      gap:.8rem;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .top,
+    .game-head,
+    .footer{
+      justify-content:space-between;
+    }
+
+    .top{
+      align-items:flex-start;
+    }
+
+    h1{
+      margin:0;
+      font-size:2rem;
+    }
+
+    .sub,
+    .status{
+      color:#64748b;
+    }
+
+    .sub{
+      margin:.25rem 0 0;
+    }
+
+    .status{
+      font-size:.88rem;
+      margin-top:.4rem;
+    }
+
+    .pill{
+      padding:.4rem .75rem;
+      border-radius:999px;
+      background:#eef2ff;
+      font-weight:800;
+      font-size:.9rem;
+    }
+
+    .overview{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:.8rem;
+      margin:1.2rem 0;
+    }
+
+    .info-card,
+    .panel{
+      border:1px solid #e5e7ff;
+      background:#f8f9ff;
+      border-radius:1rem;
+      padding:1rem;
+    }
+
+    .panel{
+      background:#fbfcff;
+      border-radius:1.25rem;
+      margin-top:1rem;
+      padding:1.25rem;
+    }
+
+    .label{
+      font-size:.78rem;
+      color:#64748b;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      font-weight:800;
+    }
+
+    .value{
+      margin-top:.25rem;
+      font-weight:900;
+    }
+
+    .stars{
+      font-size:1.35rem;
+      color:#f59e0b;
+      letter-spacing:.08em;
+    }
+
+    .rules{
+      background:#eef2ff;
+      border-radius:1rem;
+      padding:.9rem 1rem;
+      color:#3730a3;
+      font-weight:650;
+      line-height:1.5;
+    }
+
+    .btn{
+      border:0;
+      border-radius:999px;
+      padding:.85rem 1.2rem;
+      font-size:1rem;
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      text-align:center;
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:default;
+    }
+
+    .primary{
+      background:#4f46e5;
+      color:#fff;
+    }
+
+    .secondary{
+      background:#e2e8f0;
+      color:#0f172a;
+    }
+
+    .progress-track{
+      height:12px;
+      background:#e2e8f0;
+      border-radius:999px;
+      overflow:hidden;
+      margin:1rem 0;
+    }
+
+    .progress-fill{
+      height:100%;
+      width:0;
+      background:#4f46e5;
+      transition:width .25s;
+    }
+
+    .question-wrap{
+      min-height:250px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:1rem;
+    }
+
+    .question{
+      width:100%;
+      font-size:clamp(1.35rem,4vw,2rem);
+      font-weight:800;
+      line-height:1.45;
+    }
+
+    .measure-question{
+      font-size:clamp(1.8rem,6vw,3rem);
+      font-weight:900;
+    }
+
+    .prompt{
+      margin:.5rem 0 1rem;
+      font-size:1.1rem;
+    }
+
+    .diagram{
+      width:min(520px,100%);
+      height:auto;
+      display:block;
+      margin:.4rem auto;
+    }
+
+    .shape{
+      fill:#eef2ff;
+      stroke:#312e81;
+      stroke-width:4;
+    }
+
+    .guide{
+      stroke:#64748b;
+      stroke-width:2;
+      stroke-dasharray:7 6;
+    }
+
+    .dim{
+      font-size:18px;
+      font-weight:800;
+      fill:#111827;
+    }
+
+    .small-note{
+      font-size:14px;
+      fill:#64748b;
+    }
+
+    .answer-area{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:.7rem;
+      flex-wrap:wrap;
+      margin-top:.35rem;
+    }
+
+    .answer{
+      width:min(260px,100%);
+      font-size:1.35rem;
+      padding:.85rem 1rem;
+      border:2px solid #c7d2fe;
+      border-radius:1rem;
+      outline:none;
+      text-align:center;
+    }
+
+    .answer:focus{
+      border-color:#4f46e5;
+      box-shadow:0 0 0 4px rgba(79,70,229,.14);
+    }
+
+    .answer-unit{
+      font-size:1.25rem;
+      font-weight:900;
+      min-width:3rem;
+      text-align:left;
+    }
+
+    .feedback{
+      min-height:2rem;
+      margin-top:.9rem;
+      text-align:center;
+      font-weight:850;
+      font-size:1.05rem;
+    }
+
+    .good{
+      color:#15803d;
+    }
+
+    .wrong{
+      color:#b91c1c;
+    }
+
+    .hint{
+      color:#475569;
+    }
+
+    .result-score{
+      font-size:3rem;
+      font-weight:950;
+      margin:.35rem 0;
+    }
+
+    .hidden{
+      display:none !important;
+    }
+
+    .footer{
+      margin-top:1.2rem;
+      padding-top:1rem;
+      border-top:1px solid #eef2ff;
+    }
+
+    .link{
+      color:#4f46e5;
+      font-weight:850;
+      text-decoration:none;
+    }
+
+    @media(max-width:600px){
+      body{
+        padding:10px;
+      }
+
+      .app{
+        padding:1rem;
+      }
+
+      .answer,
+      .answer-area .btn{
+        width:100%;
+      }
+
+      .answer-unit{
+        text-align:center;
+        width:100%;
+      }
+
+      .question-wrap{
+        min-height:220px;
+        padding:.4rem;
+      }
+
+      .dim{
+        font-size:16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<main class="app">
+
+  <div class="top">
+    <div>
+      <h1>Maten en formules</h1>
+
+      <div class="sub" id="levelSubtitle">
+        Niveau laden…
+      </div>
+
+      <div class="status" id="sheetStatus">
+        Sheets: verbinden…
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="pill" id="who">
+        Leerling: —
+      </span>
+
+      <span class="pill" id="whichClass">
+        Klas: —
+      </span>
+    </div>
+  </div>
+
+  <section class="overview">
+
+    <div class="info-card">
+      <div class="label">Huidig niveau</div>
+      <div class="value" id="levelValue">—</div>
+    </div>
+
+    <div class="info-card">
+      <div class="label">Behaalde rondes</div>
+      <div class="value stars" id="starsValue">☆☆☆</div>
+    </div>
+
+    <div class="info-card">
+      <div class="label">Laatste pogingen</div>
+      <div class="value" id="attemptsValue">
+        Nog niet gespeeld
+      </div>
+    </div>
+
+  </section>
+
+  <section class="panel" id="introPanel">
+
+    <h2 id="introTitle">
+      Even laden…
+    </h2>
+
+    <p id="introText"></p>
+
+    <div class="rules">
+      Een ronde heeft 10 opgaven. Met 9 of 10 goede antwoorden
+      behaal je een ronde. Drie behaalde rondes binnen je laatste
+      vijf pogingen openen het volgende niveau.
+    </div>
+
+    <p>
+      <b>Antwoorden:</b> typ alleen het getal. De juiste eenheid
+      staat al achter het antwoordvak. Een komma en een punt worden
+      allebei geaccepteerd.
+    </p>
+
+    <div class="row">
+      <button
+        class="btn primary"
+        id="startBtn"
+        type="button"
+        disabled
+      >
+        Gegevens laden…
+      </button>
+
+      <a class="btn secondary" href="menu.html">
+        Terug naar menu
+      </a>
+    </div>
+
+  </section>
+
+  <section class="panel hidden" id="gamePanel">
+
+    <div class="game-head">
+      <b id="questionCounter">
+        Opgave 1 van 10
+      </b>
+
+      <b id="scoreCounter">
+        0 goed
+      </b>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="rules" id="instructionBox"></div>
+
+    <div class="question-wrap">
+      <div class="question" id="questionBox"></div>
+    </div>
+
+    <div class="answer-area">
+
+      <input
+        class="answer"
+        id="answerInput"
+        type="text"
+        inputmode="decimal"
+        autocomplete="off"
+        placeholder="Jouw antwoord"
+      >
+
+      <span class="answer-unit" id="answerUnit"></span>
+
+      <button
+        class="btn primary"
+        id="actionBtn"
+        type="button"
+      >
+        Controleer
+      </button>
+
+    </div>
+
+    <div
+      class="feedback"
+      id="feedback"
+      aria-live="polite"
+    ></div>
+
+  </section>
+
+  <section class="panel hidden" id="resultPanel">
+
+    <h2 id="resultTitle">
+      Ronde klaar
+    </h2>
+
+    <div class="result-score" id="resultScore">
+      0/10
+    </div>
+
+    <p id="resultText"></p>
+
+    <div class="stars" id="resultStars">
+      ☆☆☆
+    </div>
+
+    <div class="status" id="saveStatus"></div>
+
+    <div class="row" style="margin-top:1rem">
+      <button
+        class="btn primary"
+        id="againBtn"
+        type="button"
+      >
+        Nog een ronde
+      </button>
+
+      <a class="btn secondary" href="menu.html">
+        Terug naar menu
+      </a>
+    </div>
+
+  </section>
+
+  <div class="footer">
+    <a class="link" href="menu.html">
+      ← Rekenen bovenbouw
+    </a>
+
+    <span class="status">
+      Minimaal 90% goed = ronde behaald
+    </span>
+  </div>
+
+</main>
+
+<script>
+const SHEETS_EXEC_URL =
+  "https://script.google.com/macros/s/AKfycbyqp-Dl5JSdeCvL1qti_cbjwoKUmuXTc3FnKSwQnhvArEHbO_Df7mH30RWaT6uov3E/exec";
+
+const STORAGE_CURRENT =
+  "rekenen_bovenbouw_current_student_v1";
+
+const STORAGE_CLASS =
+  "rekenen_bovenbouw_current_class_v1";
+
+const STORAGE_CODE =
+  "rekenen_bovenbouw_current_code_v1";
+
+const STORAGE_DATA_PREFIX =
+  "rekenen_bovenbouw_data_v1_";
+
+const ROUND_SIZE = 10;
+const PASS_SCORE = 9;
+
+const LEVELS = [
+  {
+    name:
+      "Omtrek van vierkanten, rechthoeken en driehoeken",
+
+    intro:
+      "Bereken de omtrek van een getekende figuur.",
+
+    instruction:
+      "Tel alle zijden van de figuur bij elkaar op."
+  },
+
+  {
+    name:
+      "Oppervlakte van vierkanten en rechthoeken",
+
+    intro:
+      "Bereken de oppervlakte van een vierkant of rechthoek.",
+
+    instruction:
+      "Rechthoek: lengte × breedte. Vierkant: zijde × zijde."
+  },
+
+  {
+    name:
+      "Lengtematen met hele getallen omzetten",
+
+    intro:
+      "Zet lengtematen met hele getallen om.",
+
+    instruction:
+      "Gebruik de bekende relaties tussen millimeter, centimeter, decimeter, meter en kilometer."
+  },
+
+  {
+    name:
+      "Lengtematen met kommagetallen omzetten",
+
+    intro:
+      "Zet lengtematen met kommagetallen om.",
+
+    instruction:
+      "Gebruik dezelfde maatverhoudingen en let goed op de plaats van de komma."
+  },
+
+  {
+    name:
+      "Gewichtsmaten omzetten",
+
+    intro:
+      "Zet milligram, gram, kilogram en ton om.",
+
+    instruction:
+      "1 g = 1000 mg, 1 kg = 1000 g en 1 ton = 1000 kg."
+  },
+
+  {
+    name:
+      "Litermaten omzetten",
+
+    intro:
+      "Zet milliliter, centiliter, deciliter en liter om.",
+
+    instruction:
+      "1 liter = 10 dl = 100 cl = 1000 ml."
+  },
+
+  {
+    name:
+      "Tijd omrekenen",
+
+    intro:
+      "Reken uren, minuten, seconden en dagen om.",
+
+    instruction:
+      "1 minuut = 60 seconden, 1 uur = 60 minuten en 1 dag = 24 uur."
+  },
+
+  {
+    name:
+      "Omtrek van samengestelde figuren",
+
+    intro:
+      "Bereken de omtrek van een samengestelde figuur.",
+
+    instruction:
+      "Loop langs de buitenrand en tel alle aangegeven zijden op."
+  },
+
+  {
+    name:
+      "Oppervlakte van samengestelde figuren",
+
+    intro:
+      "Bereken de oppervlakte van een L-vorm.",
+
+    instruction:
+      "Bereken de grote rechthoek en trek het ontbrekende rechthoekje ervan af."
+  },
+
+  {
+    name:
+      "Ontbrekende maat bij omtrek",
+
+    intro:
+      "Zoek een ontbrekende zijde met behulp van de omtrek.",
+
+    instruction:
+      "Gebruik de gegeven omtrek en trek de bekende zijden eraf."
+  },
+
+  {
+    name:
+      "Ontbrekende maat bij oppervlakte",
+
+    intro:
+      "Zoek een ontbrekende zijde met behulp van de oppervlakte.",
+
+    instruction:
+      "Deel de oppervlakte door de bekende zijde. Bij een vierkant zoek je welk getal keer zichzelf de oppervlakte geeft."
+  },
+
+  {
+    name:
+      "Kubieke maten",
+
+    intro:
+      "Zet cm³, dm³ en m³ om.",
+
+    instruction:
+      "Elke stap bij kubieke maten is ×1000 of :1000."
+  },
+
+  {
+    name:
+      "Liters en kubieke maten",
+
+    intro:
+      "Koppel liters aan kubieke maten.",
+
+    instruction:
+      "1 cm³ = 1 ml, 1 dm³ = 1 liter en 1 m³ = 1000 liter."
+  }
+];
+
+const studentId =
+  (
+    localStorage.getItem(STORAGE_CURRENT) ||
+    ""
+  ).trim();
+
+const studentClass =
+  (
+    localStorage.getItem(STORAGE_CLASS) ||
+    ""
+  ).trim();
+
+const studentCode =
+  (
+    localStorage.getItem(STORAGE_CODE) ||
+    ""
+  ).trim();
+
+if(
+  !studentId ||
+  !studentClass ||
+  !studentCode
+){
+  location.href =
+    "index.html";
+}
+
+document.getElementById("who").textContent =
+  `Leerling: ${studentId}`;
+
+document.getElementById("whichClass").textContent =
+  `Klas: ${studentClass}`;
+
+function defaultData(){
+  return {
+    v:1,
+    id:studentId,
+    klas:studentClass,
+    code:studentCode,
+
+    levels:{
+      breuken:0,
+      kommagetallen:0,
+      procenten:0,
+      maten:0
+    },
+
+    attempts:{
+      breuken:[],
+      kommagetallen:[],
+      procenten:[],
+      maten:[]
+    }
+  };
+}
+
+function dataKey(){
+  return (
+    STORAGE_DATA_PREFIX +
+    studentClass +
+    "__" +
+    studentId
+  );
+}
+
+function normalizeAttempts(value){
+  let attempts =
+    value;
+
+  if(typeof attempts === "string"){
+    attempts =
+      attempts
+        ? attempts.split(",")
+        : [];
+  }
+
+  if(!Array.isArray(attempts)){
+    return [];
+  }
+
+  return attempts
+    .map(item => {
+      return (
+        item === true ||
+        item === 1 ||
+        item === "1" ||
+        item === "true"
+      );
+    })
+    .slice(-5);
+}
+
+function normalizeData(data){
+  const result =
+    defaultData();
+
+  if(
+    !data ||
+    typeof data !== "object"
+  ){
+    return result;
+  }
+
+  [
+    "breuken",
+    "kommagetallen",
+    "procenten",
+    "maten"
+  ].forEach(part => {
+    const level =
+      Number(
+        data.levels?.[part]
+      );
+
+    result.levels[part] =
+      Number.isFinite(level) &&
+      level >= 0
+        ? Math.floor(level)
+        : 0;
+
+    result.attempts[part] =
+      normalizeAttempts(
+        data.attempts?.[part]
+      );
+  });
+
+  return result;
+}
+
+function getLocalData(){
+  try{
+    return normalizeData(
+      JSON.parse(
+        localStorage.getItem(dataKey()) ||
+        "null"
+      )
+    );
+
+  }catch(error){
+    return defaultData();
+  }
+}
+
+function setLocalData(data){
+  localStorage.setItem(
+    dataKey(),
+    JSON.stringify(
+      normalizeData(data)
+    )
+  );
+}
+
+function validLevel(value){
+  const number =
+    Number(value);
+
+  const level =
+    Number.isFinite(number) &&
+    number >= 0
+      ? Math.floor(number)
+      : 0;
+
+  return Math.min(
+    level,
+    LEVELS.length - 1
+  );
+}
+
+let jsonpSequence =
+  0;
+
+function jsonp(url){
+  return new Promise((resolve,reject) => {
+    const callbackName =
+      "__maten_" +
+      (++jsonpSequence) +
+      "_" +
+      Date.now();
+
+    const script =
+      document.createElement("script");
+
+    const timer =
+      setTimeout(() => {
+        cleanup();
+
+        reject(
+          new Error("Timeout")
+        );
+      },12000);
+
+    function cleanup(){
+      clearTimeout(timer);
+
+      try{
+        delete window[callbackName];
+      }catch(error){
+        // Geen actie nodig.
+      }
+
+      script.remove();
+    }
+
+    window[callbackName] =
+      data => {
+        cleanup();
+        resolve(data);
+      };
+
+    script.onerror =
+      () => {
+        cleanup();
+
+        reject(
+          new Error("JSONP mislukt")
+        );
+      };
+
+    const separator =
+      url.includes("?")
+        ? "&"
+        : "?";
+
+    script.src =
+      url +
+      separator +
+      "callback=" +
+      encodeURIComponent(
+        callbackName
+      );
+
+    document.body.appendChild(
+      script
+    );
+  });
+}
+
+function sheetsGet(){
+  const url =
+    `${SHEETS_EXEC_URL}?action=get` +
+    `&klas=${encodeURIComponent(studentClass)}` +
+    `&naam=${encodeURIComponent(studentId)}` +
+    `&code=${encodeURIComponent(studentCode)}`;
+
+  return jsonp(url);
+}
+
+function sheetsSetMaten(data,score){
+  const attempts =
+    data.attempts.maten
+      .map(Boolean)
+      .map(Number)
+      .join(",");
+
+  const url =
+    `${SHEETS_EXEC_URL}?action=set` +
+    `&klas=${encodeURIComponent(studentClass)}` +
+    `&naam=${encodeURIComponent(studentId)}` +
+    `&code=${encodeURIComponent(studentCode)}` +
+    `&maten=${encodeURIComponent(data.levels.maten)}` +
+    `&pogingenMaten=${encodeURIComponent(attempts)}` +
+    `&onderdeel=maten` +
+    `&score=${encodeURIComponent(score)}`;
+
+  return jsonp(url);
+}
+
+function passedCount(attempts){
+  return Math.min(
+    3,
+    normalizeAttempts(attempts)
+      .filter(Boolean)
+      .length
+  );
+}
+
+function stars(attempts){
+  const number =
+    passedCount(attempts);
+
+  return (
+    "★".repeat(number) +
+    "☆".repeat(3 - number)
+  );
+}
+
+function attemptsText(attempts){
+  const list =
+    normalizeAttempts(attempts);
+
+  return list.length
+    ? list
+        .map(item => {
+          return item
+            ? "✓"
+            : "✗";
+        })
+        .join(" ")
+    : "Nog niet gespeeld";
+}
+
+let currentData =
+  getLocalData();
+
+let ready =
+  false;
+
+let questions =
+  [];
+
+let questionIndex =
+  0;
+
+let correctCount =
+  0;
+
+let checked =
+  false;
+
+function renderOverview(){
+  const level =
+    validLevel(
+      currentData.levels.maten
+    );
+
+  const levelInformation =
+    LEVELS[level];
+
+  const attempts =
+    currentData.attempts.maten;
+
+  document.getElementById(
+    "levelSubtitle"
+  ).textContent =
+    `Niveau ${level + 1}: ${levelInformation.name}`;
+
+  document.getElementById(
+    "levelValue"
+  ).textContent =
+    `${level + 1} van ${LEVELS.length}`;
+
+  document.getElementById(
+    "starsValue"
+  ).textContent =
+    stars(attempts);
+
+  document.getElementById(
+    "attemptsValue"
+  ).textContent =
+    attemptsText(attempts);
+
+  document.getElementById(
+    "introTitle"
+  ).textContent =
+    `Niveau ${level + 1}: ${levelInformation.name}`;
+
+  document.getElementById(
+    "introText"
+  ).textContent =
+    levelInformation.intro;
+}
+
+async function loadData(){
+  renderOverview();
+
+  try{
+    const response =
+      await sheetsGet();
+
+    if(
+      !response ||
+      response.ok !== true
+    ){
+      throw new Error(
+        response?.error ||
+        "Onverwacht antwoord"
+      );
+    }
+
+    currentData =
+      normalizeData(
+        response.data || {
+          levels:
+            response.levels,
+
+          attempts:
+            response.attempts
+        }
+      );
+
+    setLocalData(
+      currentData
+    );
+
+    document.getElementById(
+      "sheetStatus"
+    ).textContent =
+      "Sheets: verbonden ✅";
+
+  }catch(error){
+    document.getElementById(
+      "sheetStatus"
+    ).textContent =
+      "Sheets: niet bereikbaar; lokale back-up gebruikt.";
+  }
+
+  renderOverview();
+
+  ready =
+    true;
+
+  const startButton =
+    document.getElementById(
+      "startBtn"
+    );
+
+  startButton.disabled =
+    false;
+
+  startButton.textContent =
+    "Start ronde";
+}
+
+function randomInt(min,max){
+  return (
+    Math.floor(
+      Math.random() *
+      (max - min + 1)
+    ) +
+    min
+  );
+}
+
+function choose(array){
+  return array[
+    randomInt(
+      0,
+      array.length - 1
+    )
+  ];
+}
+
+function formatNumber(value){
+  const rounded =
+    Math.round(
+      (value + Number.EPSILON) *
+      1000000
+    ) /
+    1000000;
+
+  return rounded.toLocaleString(
+    "nl-NL",
+    {
+      useGrouping:false,
+      maximumFractionDigits:6
+    }
+  );
+}
+
+function parseNumber(raw){
+  const text =
+    String(raw || "")
+      .trim()
+      .replace(/\s/g,"")
+      .replace(",",".");
+
+  if(
+    !text ||
+    !/^-?\d+(\.\d+)?$/.test(text)
+  ){
+    return null;
+  }
+
+  const number =
+    Number(text);
+
+  return Number.isFinite(number)
+    ? number
+    : null;
+}
+
+function equalNumber(first,second){
+  return (
+    Math.abs(first - second) <
+    0.00000001
+  );
+}
+
+function createQuestion(
+  html,
+  expected,
+  unit,
+  key,
+  explanation = ""
+){
+  return {
+    html,
+    expected,
+    unit,
+
+    answerText:
+      formatNumber(expected),
+
+    key,
+    explanation
+  };
+}
+
+function measureHtml(value,from,to){
+  return (
+    `<div class="measure-question">` +
+      `${formatNumber(value)} ${from} = ? ${to}` +
+    `</div>`
+  );
+}
+
+/* =====================================================
+   SVG-TEKENINGEN
+===================================================== */
+
+function rectangleSvg(
+  length,
+  width,
+  unit,
+  missing = ""
+){
+  const topLabel =
+    missing === "length"
+      ? "?"
+      : `${formatNumber(length)} ${unit}`;
+
+  const sideLabel =
+    missing === "width"
+      ? "?"
+      : `${formatNumber(width)} ${unit}`;
+
+  return `
+    <svg
+      class="diagram"
+      viewBox="0 0 420 250"
+      role="img"
+      aria-label="Rechthoek"
+    >
+      <rect
+        class="shape"
+        x="95"
+        y="55"
+        width="230"
+        height="135"
+        rx="3"
+      />
+
+      <text
+        class="dim"
+        x="210"
+        y="35"
+        text-anchor="middle"
+      >
+        ${topLabel}
+      </text>
+
+      <text
+        class="dim"
+        x="48"
+        y="128"
+        text-anchor="middle"
+      >
+        ${sideLabel}
+      </text>
+    </svg>
+  `;
+}
+
+function squareSvg(
+  side,
+  unit,
+  missing = false
+){
+  const label =
+    missing
+      ? "?"
+      : `${formatNumber(side)} ${unit}`;
+
+  return `
+    <svg
+      class="diagram"
+      viewBox="0 0 420 250"
+      role="img"
+      aria-label="Vierkant"
+    >
+      <rect
+        class="shape"
+        x="125"
+        y="45"
+        width="170"
+        height="170"
+        rx="3"
+      />
+
+      <text
+        class="dim"
+        x="210"
+        y="28"
+        text-anchor="middle"
+      >
+        ${label}
+      </text>
+
+      <text
+        class="dim"
+        x="82"
+        y="135"
+        text-anchor="middle"
+      >
+        ${label}
+      </text>
+    </svg>
+  `;
+}
+
+function triangleSvg(
+  firstSide,
+  secondSide,
+  thirdSide,
+  unit,
+  missing = ""
+){
+  const firstLabel =
+    missing === "a"
+      ? "?"
+      : `${firstSide} ${unit}`;
+
+  const secondLabel =
+    missing === "b"
+      ? "?"
+      : `${secondSide} ${unit}`;
+
+  const thirdLabel =
+    missing === "c"
+      ? "?"
+      : `${thirdSide} ${unit}`;
+
+  return `
+    <svg
+      class="diagram"
+      viewBox="0 0 420 250"
+      role="img"
+      aria-label="Driehoek"
+    >
+      <polygon
+        class="shape"
+        points="75,205 210,45 345,205"
+      />
+
+      <text
+        class="dim"
+        x="210"
+        y="232"
+        text-anchor="middle"
+      >
+        ${thirdLabel}
+      </text>
+
+      <text
+        class="dim"
+        x="118"
+        y="120"
+        text-anchor="middle"
+      >
+        ${firstLabel}
+      </text>
+
+      <text
+        class="dim"
+        x="302"
+        y="120"
+        text-anchor="middle"
+      >
+        ${secondLabel}
+      </text>
+    </svg>
+  `;
+}
+
+function lShapePerimeterSvg(
+  totalWidth,
+  totalHeight,
+  missingWidth,
+  missingHeight,
+  unit
+){
+  const topWidth =
+    totalWidth - missingWidth;
+
+  const rightHeight =
+    totalHeight - missingHeight;
+
+  return `
+    <svg
+      class="diagram"
+      viewBox="0 0 440 285"
+      role="img"
+      aria-label="Samengestelde L-vorm"
+    >
+      <polygon
+        class="shape"
+        points="70,45 260,45 260,110 355,110 355,225 70,225"
+      />
+
+      <text
+        class="dim"
+        x="165"
+        y="28"
+        text-anchor="middle"
+      >
+        ${topWidth} ${unit}
+      </text>
+
+      <text
+        class="dim"
+        x="280"
+        y="82"
+        text-anchor="middle"
+      >
+        ${missingHeight} ${unit}
+      </text>
+
+      <text
+        class="dim"
+        x="307"
+        y="100"
+        text-anchor="middle"
+      >
+        ${missingWidth} ${unit}
+      </text>
+
+      <text
+        class="dim"
+        x="390"
+        y="172"
+        text-anchor="middle"
+      >
+        ${rightHeight} ${unit}
+      </text>
+
+      <text
+        class="dim"
+        x="212"
+        y="254"
+        text-anchor="middle"
+      >
+        ${totalWidth} ${unit}
+      </text>
+
+      <text
+        class="dim"
+        x="32"
+        y="142"
+        text-anchor="middle"
+      >
+        ${totalHeight} ${unit}
+      </text>
+
+      <text
+        class="small-note"
+        x="220"
+        y="278"
+        text-anchor="middle"
+      >
+        niet op schaal
+      </text>
+    </svg>
+  `;
+}
+
+function lShapeAreaSvg(
+  totalWidth,
+  totalHeight,
+  missingWidth,
+  missingHeight,
+  unit
+){
+  return `
+    <svg
+      class="diagram"
+      viewBox="0 0 440 285"
+      role="img"
+      aria-label="Samengestelde L-vorm"
+    >
+      <polygon
+        class="shape"
+        points="70,45 260,45 260,110 355,110 355,225 70,225"
+      />
+
+      <line
+        class="guide"
+        x1="70"
+        y1="45"
+        x2="355"
+        y2="45"
+      />
+
+      <line
+        class="guide"
+        x1="355"
+        y1="45"
+        x2="355"
+        y2="110"
+      />
+
+      <text
+        class="dim"
+        x="212"
+        y="254"
+        text-anchor="middle"
+      >
+        ${totalWidth} ${unit}
+      </text>
+
+      <text
+        class="dim"
+        x="32"
+        y="142"
+        text-anchor="middle"
+      >
+        ${totalHeight} ${unit}
+      </text>
+
+      <text
+        class="dim"
+        x="307"
+        y="100"
+        text-anchor="middle"
+      >
+        ${missingWidth} ${unit}
+      </text>
+
+      <text
+        class="dim"
+        x="390"
+        y="82"
+        text-anchor="middle"
+      >
+        ${missingHeight} ${unit}
+      </text>
+
+      <text
+        class="small-note"
+        x="220"
+        y="278"
+        text-anchor="middle"
+      >
+        niet op schaal
+      </text>
+    </svg>
+  `;
+}
+
+/* =====================================================
+   NIVEAU 1
+   OMTREK
+===================================================== */
+
+function generateLevel1(){
+  const unit =
+    choose(["cm","m"]);
+
+  const type =
+    choose([
+      "rectangle",
+      "square",
+      "triangle"
+    ]);
+
+  if(type === "rectangle"){
+    const length =
+      randomInt(4,14);
+
+    const width =
+      randomInt(2,9);
+
+    return createQuestion(
+      `<div class="prompt">Bereken de omtrek.</div>` +
+      rectangleSvg(
+        length,
+        width,
+        unit
+      ),
+
+      2 * (length + width),
+
+      unit,
+
+      `1-r-${length}-${width}-${unit}`,
+
+      `2 × (${length} + ${width})`
+    );
+  }
+
+  if(type === "square"){
+    const side =
+      randomInt(3,12);
+
+    return createQuestion(
+      `<div class="prompt">Bereken de omtrek.</div>` +
+      squareSvg(
+        side,
+        unit
+      ),
+
+      4 * side,
+
+      unit,
+
+      `1-s-${side}-${unit}`,
+
+      `4 × ${side}`
+    );
+  }
+
+  const sides =
+    choose([
+      [3,4,5],
+      [4,5,6],
+      [5,5,8],
+      [5,6,7],
+      [6,7,8],
+      [7,8,9]
+    ]);
+
+  return createQuestion(
+    `<div class="prompt">Bereken de omtrek.</div>` +
+    triangleSvg(
+      sides[0],
+      sides[1],
+      sides[2],
+      unit
+    ),
+
+    sides[0] +
+    sides[1] +
+    sides[2],
+
+    unit,
+
+    `1-t-${sides.join("-")}-${unit}`,
+
+    `${sides[0]} + ${sides[1]} + ${sides[2]}`
+  );
+}
+
+/* =====================================================
+   NIVEAU 2
+   OPPERVLAKTE
+===================================================== */
+
+function generateLevel2(){
+  const unit =
+    choose(["cm","m"]);
+
+  if(Math.random() < .55){
+    const length =
+      randomInt(4,14);
+
+    const width =
+      randomInt(2,10);
+
+    return createQuestion(
+      `<div class="prompt">Bereken de oppervlakte.</div>` +
+      rectangleSvg(
+        length,
+        width,
+        unit
+      ),
+
+      length * width,
+
+      `${unit}²`,
+
+      `2-r-${length}-${width}-${unit}`,
+
+      `${length} × ${width}`
+    );
+  }
+
+  const side =
+    randomInt(3,12);
+
+  return createQuestion(
+    `<div class="prompt">Bereken de oppervlakte.</div>` +
+    squareSvg(
+      side,
+      unit
+    ),
+
+    side * side,
+
+    `${unit}²`,
+
+    `2-s-${side}-${unit}`,
+
+    `${side} × ${side}`
+  );
+}
+
+/* =====================================================
+   NIVEAU 3
+   LENGTEMATEN MET HELE GETALLEN
+===================================================== */
+
+function generateLevel3(){
+  const templates = [
+    () => {
+      const value =
+        randomInt(1,20);
+
+      return [
+        value,
+        "m",
+        value * 100,
+        "cm"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,20);
+
+      return [
+        value,
+        "m",
+        value * 10,
+        "dm"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,9);
+
+      return [
+        value,
+        "km",
+        value * 1000,
+        "m"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,50);
+
+      return [
+        value,
+        "cm",
+        value * 10,
+        "mm"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,50);
+
+      return [
+        value,
+        "dm",
+        value * 10,
+        "cm"
+      ];
+    },
+
+    () => {
+      const answer =
+        randomInt(1,20);
+
+      return [
+        answer * 100,
+        "cm",
+        answer,
+        "m"
+      ];
+    },
+
+    () => {
+      const answer =
+        randomInt(1,9);
+
+      return [
+        answer * 1000,
+        "m",
+        answer,
+        "km"
+      ];
+    },
+
+    () => {
+      const answer =
+        randomInt(1,50);
+
+      return [
+        answer * 10,
+        "mm",
+        answer,
+        "cm"
+      ];
+    },
+
+    () => {
+      const answer =
+        randomInt(1,20);
+
+      return [
+        answer * 10,
+        "dm",
+        answer,
+        "m"
+      ];
+    }
+  ];
+
+  const [
+    value,
+    from,
+    answer,
+    to
+  ] =
+    choose(templates)();
+
+  return createQuestion(
+    measureHtml(
+      value,
+      from,
+      to
+    ),
+
+    answer,
+    to,
+
+    `3-${value}-${from}-${to}`
+  );
+}
+
+/* =====================================================
+   NIVEAU 4
+   LENGTEMATEN MET KOMMAGETALLEN
+===================================================== */
+
+function generateLevel4(){
+  const templates = [
+    () => {
+      const value =
+        randomInt(1,99) / 10;
+
+      return [
+        value,
+        "m",
+        value * 100,
+        "cm"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,50) / 10;
+
+      return [
+        value,
+        "km",
+        value * 1000,
+        "m"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          25,50,75,125,150,175,
+          225,250,375,425,550
+        ]);
+
+      return [
+        value,
+        "cm",
+        value / 100,
+        "m"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,99) / 10;
+
+      return [
+        value,
+        "dm",
+        value * 10,
+        "cm"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          15,25,35,45,
+          55,75,85,95
+        ]);
+
+      return [
+        value,
+        "mm",
+        value / 10,
+        "cm"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          15,25,35,45,
+          55,75,85,95
+        ]);
+
+      return [
+        value,
+        "dm",
+        value / 10,
+        "m"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,99) / 10;
+
+      return [
+        value,
+        "cm",
+        value * 10,
+        "mm"
+      ];
+    }
+  ];
+
+  const [
+    value,
+    from,
+    answer,
+    to
+  ] =
+    choose(templates)();
+
+  return createQuestion(
+    measureHtml(
+      value,
+      from,
+      to
+    ),
+
+    answer,
+    to,
+
+    `4-${value}-${from}-${to}`
+  );
+}
+
+/* =====================================================
+   NIVEAU 5
+   GEWICHTSMATEN
+===================================================== */
+
+function generateLevel5(){
+  const templates = [
+    () => {
+      const value =
+        randomInt(1,99) / 10;
+
+      return [
+        value,
+        "kg",
+        value * 1000,
+        "g"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          50,100,150,250,500,
+          750,1250,1500,2250
+        ]);
+
+      return [
+        value,
+        "g",
+        value / 1000,
+        "kg"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          1,1.5,2,2.5,3,4,5
+        ]);
+
+      return [
+        value,
+        "ton",
+        value * 1000,
+        "kg"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          500,1000,1500,2000,
+          2500,3000,5000
+        ]);
+
+      return [
+        value,
+        "kg",
+        value / 1000,
+        "ton"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,500);
+
+      return [
+        value,
+        "g",
+        value * 1000,
+        "mg"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          500,1000,1500,
+          2500,4000,7500
+        ]);
+
+      return [
+        value,
+        "mg",
+        value / 1000,
+        "g"
+      ];
+    }
+  ];
+
+  const [
+    value,
+    from,
+    answer,
+    to
+  ] =
+    choose(templates)();
+
+  return createQuestion(
+    measureHtml(
+      value,
+      from,
+      to
+    ),
+
+    answer,
+    to,
+
+    `5-${value}-${from}-${to}`
+  );
+}
+
+/* =====================================================
+   NIVEAU 6
+   LITERMATEN
+===================================================== */
+
+function generateLevel6(){
+  const templates = [
+    () => {
+      const value =
+        randomInt(1,50) / 10;
+
+      return [
+        value,
+        "l",
+        value * 1000,
+        "ml"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          50,100,250,500,
+          750,1250,1500,2250
+        ]);
+
+      return [
+        value,
+        "ml",
+        value / 1000,
+        "l"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,50) / 10;
+
+      return [
+        value,
+        "l",
+        value * 10,
+        "dl"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,80);
+
+      return [
+        value,
+        "dl",
+        value / 10,
+        "l"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,100);
+
+      return [
+        value,
+        "cl",
+        value * 10,
+        "ml"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          100,250,500,
+          750,1000,1250
+        ]);
+
+      return [
+        value,
+        "ml",
+        value / 10,
+        "cl"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,50);
+
+      return [
+        value,
+        "dl",
+        value * 100,
+        "ml"
+      ];
+    }
+  ];
+
+  const [
+    value,
+    from,
+    answer,
+    to
+  ] =
+    choose(templates)();
+
+  return createQuestion(
+    measureHtml(
+      value,
+      from,
+      to
+    ),
+
+    answer,
+    to,
+
+    `6-${value}-${from}-${to}`
+  );
+}
+
+/* =====================================================
+   NIVEAU 7
+   TIJD
+===================================================== */
+
+function generateLevel7(){
+  const type =
+    randomInt(1,8);
+
+  if(type === 1){
+    const value =
+      randomInt(1,8);
+
+    return createQuestion(
+      measureHtml(
+        value,
+        "uur",
+        "minuten"
+      ),
+
+      value * 60,
+      "minuten",
+
+      `7-hm-${value}`
+    );
+  }
+
+  if(type === 2){
+    const value =
+      randomInt(1,10) * 30;
+
+    return createQuestion(
+      measureHtml(
+        value,
+        "minuten",
+        "uur"
+      ),
+
+      value / 60,
+      "uur",
+
+      `7-mh-${value}`
+    );
+  }
+
+  if(type === 3){
+    const value =
+      randomInt(1,20);
+
+    return createQuestion(
+      measureHtml(
+        value,
+        "minuten",
+        "seconden"
+      ),
+
+      value * 60,
+      "seconden",
+
+      `7-ms-${value}`
+    );
+  }
+
+  if(type === 4){
+    const value =
+      randomInt(1,20) * 60;
+
+    return createQuestion(
+      measureHtml(
+        value,
+        "seconden",
+        "minuten"
+      ),
+
+      value / 60,
+      "minuten",
+
+      `7-sm-${value}`
+    );
+  }
+
+  if(type === 5){
+    const value =
+      randomInt(1,7);
+
+    return createQuestion(
+      measureHtml(
+        value,
+        "dagen",
+        "uur"
+      ),
+
+      value * 24,
+      "uur",
+
+      `7-dh-${value}`
+    );
+  }
+
+  if(type === 6){
+    const hours =
+      randomInt(1,5);
+
+    const minutes =
+      choose([
+        10,15,20,30,40,45,50
+      ]);
+
+    return createQuestion(
+      `<div class="measure-question">` +
+        `${hours} uur en ${minutes} minuten ` +
+        `= ? minuten` +
+      `</div>`,
+
+      hours * 60 + minutes,
+
+      "minuten",
+
+      `7-hmm-${hours}-${minutes}`
+    );
+  }
+
+  if(type === 7){
+    const value =
+      choose([
+        0.5,1.25,1.5,1.75,
+        2.25,2.5,2.75,3.5
+      ]);
+
+    return createQuestion(
+      measureHtml(
+        value,
+        "uur",
+        "minuten"
+      ),
+
+      value * 60,
+      "minuten",
+
+      `7-dhm-${value}`
+    );
+  }
+
+  const value =
+    choose([
+      0.5,1.5,2.5,3.5,4.5
+    ]);
+
+  return createQuestion(
+    measureHtml(
+      value,
+      "minuten",
+      "seconden"
+    ),
+
+    value * 60,
+    "seconden",
+
+    `7-dms-${value}`
+  );
+}
+
+/* =====================================================
+   NIVEAU 8
+   OMTREK SAMENGESTELDE FIGUREN
+===================================================== */
+
+function generateLevel8(){
+  const unit =
+    choose(["cm","m"]);
+
+  const totalWidth =
+    randomInt(8,16);
+
+  const totalHeight =
+    randomInt(7,14);
+
+  const missingWidth =
+    randomInt(
+      2,
+      totalWidth - 3
+    );
+
+  const missingHeight =
+    randomInt(
+      2,
+      totalHeight - 3
+    );
+
+  const perimeter =
+    2 * totalWidth +
+    2 * totalHeight;
+
+  return createQuestion(
+    `<div class="prompt">` +
+      `Bereken de omtrek van de L-vorm.` +
+    `</div>` +
+
+    lShapePerimeterSvg(
+      totalWidth,
+      totalHeight,
+      missingWidth,
+      missingHeight,
+      unit
+    ),
+
+    perimeter,
+    unit,
+
+    `8-${totalWidth}-${totalHeight}-${missingWidth}-${missingHeight}-${unit}`,
+
+    "Tel alle zes buitenzijden op"
+  );
+}
+
+/* =====================================================
+   NIVEAU 9
+   OPPERVLAKTE SAMENGESTELDE FIGUREN
+===================================================== */
+
+function generateLevel9(){
+  const unit =
+    choose(["cm","m"]);
+
+  const totalWidth =
+    randomInt(8,16);
+
+  const totalHeight =
+    randomInt(7,14);
+
+  const missingWidth =
+    randomInt(
+      2,
+      totalWidth - 3
+    );
+
+  const missingHeight =
+    randomInt(
+      2,
+      totalHeight - 3
+    );
+
+  const area =
+    totalWidth * totalHeight -
+    missingWidth * missingHeight;
+
+  return createQuestion(
+    `<div class="prompt">` +
+      `Bereken de oppervlakte van de L-vorm.` +
+    `</div>` +
+
+    lShapeAreaSvg(
+      totalWidth,
+      totalHeight,
+      missingWidth,
+      missingHeight,
+      unit
+    ),
+
+    area,
+
+    `${unit}²`,
+
+    `9-${totalWidth}-${totalHeight}-${missingWidth}-${missingHeight}-${unit}`,
+
+    `${totalWidth} × ${totalHeight} − ` +
+    `${missingWidth} × ${missingHeight}`
+  );
+}
+
+/* =====================================================
+   NIVEAU 10
+   ONTBREKENDE MAAT OMTREK
+===================================================== */
+
+function generateLevel10(){
+  const unit =
+    choose(["cm","m"]);
+
+  const type =
+    choose([
+      "rectangle",
+      "square",
+      "triangle"
+    ]);
+
+  if(type === "rectangle"){
+    const length =
+      randomInt(5,14);
+
+    const width =
+      randomInt(2,9);
+
+    const perimeter =
+      2 * (length + width);
+
+    return createQuestion(
+      `<div class="prompt">` +
+        `De omtrek is <b>${perimeter} ${unit}</b>. ` +
+        `Welke maat ontbreekt?` +
+      `</div>` +
+
+      rectangleSvg(
+        length,
+        width,
+        unit,
+        "width"
+      ),
+
+      width,
+      unit,
+
+      `10-r-${length}-${width}-${unit}`,
+
+      `${perimeter} − ${length} − ${length}, ` +
+      `daarna delen door 2`
+    );
+  }
+
+  if(type === "square"){
+    const side =
+      randomInt(3,12);
+
+    const perimeter =
+      4 * side;
+
+    return createQuestion(
+      `<div class="prompt">` +
+        `De omtrek is <b>${perimeter} ${unit}</b>. ` +
+        `Hoe lang is één zijde?` +
+      `</div>` +
+
+      squareSvg(
+        side,
+        unit,
+        true
+      ),
+
+      side,
+      unit,
+
+      `10-s-${side}-${unit}`,
+
+      `${perimeter} : 4`
+    );
+  }
+
+  const sides =
+    choose([
+      [3,4,5],
+      [4,5,6],
+      [5,5,8],
+      [5,6,7],
+      [6,7,8],
+      [7,8,9]
+    ]);
+
+  const missing =
+    choose(["a","b","c"]);
+
+  const expected =
+    missing === "a"
+      ? sides[0]
+      : missing === "b"
+        ? sides[1]
+        : sides[2];
+
+  const perimeter =
+    sides[0] +
+    sides[1] +
+    sides[2];
+
+  return createQuestion(
+    `<div class="prompt">` +
+      `De omtrek is <b>${perimeter} ${unit}</b>. ` +
+      `Welke zijde ontbreekt?` +
+    `</div>` +
+
+    triangleSvg(
+      sides[0],
+      sides[1],
+      sides[2],
+      unit,
+      missing
+    ),
+
+    expected,
+    unit,
+
+    `10-t-${sides.join("-")}-${missing}-${unit}`,
+
+    `${perimeter} min de twee bekende zijden`
+  );
+}
+
+/* =====================================================
+   NIVEAU 11
+   ONTBREKENDE MAAT OPPERVLAKTE
+===================================================== */
+
+function generateLevel11(){
+  const unit =
+    choose(["cm","m"]);
+
+  if(Math.random() < .65){
+    const length =
+      randomInt(4,14);
+
+    const width =
+      randomInt(2,10);
+
+    const area =
+      length * width;
+
+    return createQuestion(
+      `<div class="prompt">` +
+        `De oppervlakte is ` +
+        `<b>${area} ${unit}²</b>. ` +
+        `Welke maat ontbreekt?` +
+      `</div>` +
+
+      rectangleSvg(
+        length,
+        width,
+        unit,
+        "width"
+      ),
+
+      width,
+      unit,
+
+      `11-r-${length}-${width}-${unit}`,
+
+      `${area} : ${length}`
+    );
+  }
+
+  const side =
+    randomInt(3,12);
+
+  const area =
+    side * side;
+
+  return createQuestion(
+    `<div class="prompt">` +
+      `De oppervlakte is ` +
+      `<b>${area} ${unit}²</b>. ` +
+      `Hoe lang is één zijde?` +
+    `</div>` +
+
+    squareSvg(
+      side,
+      unit,
+      true
+    ),
+
+    side,
+    unit,
+
+    `11-s-${side}-${unit}`,
+
+    `Zoek welk getal × hetzelfde getal ${area} is`
+  );
+}
+
+/* =====================================================
+   NIVEAU 12
+   KUBIEKE MATEN
+===================================================== */
+
+function generateLevel12(){
+  const templates = [
+    () => {
+      const value =
+        choose([
+          0.5,1,1.5,2,
+          2.5,3,4,5
+        ]);
+
+      return [
+        value,
+        "m³",
+        value * 1000,
+        "dm³"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,20);
+
+      return [
+        value,
+        "dm³",
+        value * 1000,
+        "cm³"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          250,500,750,1000,
+          1500,2000,2500,5000
+        ]);
+
+      return [
+        value,
+        "dm³",
+        value / 1000,
+        "m³"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          250,500,750,1000,
+          1500,2500,5000
+        ]);
+
+      return [
+        value,
+        "cm³",
+        value / 1000,
+        "dm³"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,5);
+
+      return [
+        value,
+        "m³",
+        value * 1000000,
+        "cm³"
+      ];
+    }
+  ];
+
+  const [
+    value,
+    from,
+    answer,
+    to
+  ] =
+    choose(templates)();
+
+  return createQuestion(
+    measureHtml(
+      value,
+      from,
+      to
+    ),
+
+    answer,
+    to,
+
+    `12-${value}-${from}-${to}`
+  );
+}
+
+/* =====================================================
+   NIVEAU 13
+   LITERS EN KUBIEKE MATEN
+===================================================== */
+
+function generateLevel13(){
+  const templates = [
+    () => {
+      const value =
+        randomInt(1,30);
+
+      return [
+        value,
+        "dm³",
+        value,
+        "liter"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,30);
+
+      return [
+        value,
+        "liter",
+        value,
+        "dm³"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,5000);
+
+      return [
+        value,
+        "cm³",
+        value,
+        "ml"
+      ];
+    },
+
+    () => {
+      const value =
+        randomInt(1,5000);
+
+      return [
+        value,
+        "ml",
+        value,
+        "cm³"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          0.5,1,1.5,
+          2,2.5,3,4
+        ]);
+
+      return [
+        value,
+        "m³",
+        value * 1000,
+        "liter"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          500,1000,1500,
+          2000,2500,3000,5000
+        ]);
+
+      return [
+        value,
+        "liter",
+        value / 1000,
+        "m³"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          500,750,1000,
+          1250,1500,2000,2500
+        ]);
+
+      return [
+        value,
+        "ml",
+        value / 1000,
+        "dm³"
+      ];
+    },
+
+    () => {
+      const value =
+        choose([
+          0.5,0.75,1,
+          1.25,1.5,2,2.5
+        ]);
+
+      return [
+        value,
+        "dm³",
+        value * 1000,
+        "ml"
+      ];
+    }
+  ];
+
+  const [
+    value,
+    from,
+    answer,
+    to
+  ] =
+    choose(templates)();
+
+  return createQuestion(
+    measureHtml(
+      value,
+      from,
+      to
+    ),
+
+    answer,
+    to,
+
+    `13-${value}-${from}-${to}`
+  );
+}
+
+/* =====================================================
+   RONDE OPBOUWEN
+===================================================== */
+
+function generateProblem(level){
+  const generators = [
+    generateLevel1,
+    generateLevel2,
+    generateLevel3,
+    generateLevel4,
+    generateLevel5,
+    generateLevel6,
+    generateLevel7,
+    generateLevel8,
+    generateLevel9,
+    generateLevel10,
+    generateLevel11,
+    generateLevel12,
+    generateLevel13
+  ];
+
+  return generators[level]();
+}
+
+function buildRound(level){
+  const list =
+    [];
+
+  const keys =
+    new Set();
+
+  let guard =
+    0;
+
+  while(
+    list.length < ROUND_SIZE &&
+    guard < 400
+  ){
+    guard++;
+
+    const item =
+      generateProblem(level);
+
+    if(!keys.has(item.key)){
+      keys.add(item.key);
+      list.push(item);
+    }
+  }
+
+  while(
+    list.length <
+    ROUND_SIZE
+  ){
+    list.push(
+      generateProblem(level)
+    );
+  }
+
+  return list;
+}
+
+function validateAnswer(item,raw){
+  const number =
+    parseNumber(raw);
+
+  if(number === null){
+    return {
+      valid:false,
+      correct:false,
+
+      message:
+        "Typ alleen een getal, bijvoorbeeld 250 of 2,5."
+    };
+  }
+
+  return {
+    valid:true,
+
+    correct:
+      equalNumber(
+        number,
+        item.expected
+      )
+  };
+}
+
+/* =====================================================
+   SPEL
+===================================================== */
+
+function startRound(){
+  if(!ready){
+    return;
+  }
+
+  const level =
+    validLevel(
+      currentData.levels.maten
+    );
+
+  questions =
+    buildRound(level);
+
+  questionIndex =
+    0;
+
+  correctCount =
+    0;
+
+  checked =
+    false;
+
+  document.getElementById(
+    "introPanel"
+  ).classList.add(
+    "hidden"
+  );
+
+  document.getElementById(
+    "resultPanel"
+  ).classList.add(
+    "hidden"
+  );
+
+  document.getElementById(
+    "gamePanel"
+  ).classList.remove(
+    "hidden"
+  );
+
+  document.getElementById(
+    "instructionBox"
+  ).textContent =
+    LEVELS[level].instruction;
+
+  showQuestion();
+}
+
+function showQuestion(){
+  const item =
+    questions[
+      questionIndex
+    ];
+
+  checked =
+    false;
+
+  document.getElementById(
+    "questionCounter"
+  ).textContent =
+    `Opgave ${questionIndex + 1} van ${ROUND_SIZE}`;
+
+  document.getElementById(
+    "scoreCounter"
+  ).textContent =
+    `${correctCount} goed`;
+
+  document.getElementById(
+    "progressFill"
+  ).style.width =
+    `${questionIndex / ROUND_SIZE * 100}%`;
+
+  document.getElementById(
+    "questionBox"
+  ).innerHTML =
+    item.html;
+
+  document.getElementById(
+    "answerUnit"
+  ).textContent =
+    item.unit;
+
+  const feedback =
+    document.getElementById(
+      "feedback"
+    );
+
+  feedback.textContent =
+    "";
+
+  feedback.className =
+    "feedback";
+
+  const answerInput =
+    document.getElementById(
+      "answerInput"
+    );
+
+  answerInput.value =
+    "";
+
+  answerInput.disabled =
+    false;
+
+  document.getElementById(
+    "actionBtn"
+  ).textContent =
+    "Controleer";
+
+  answerInput.focus();
+}
+
+function handleAction(){
+  if(checked){
+    questionIndex++;
+
+    if(
+      questionIndex >=
+      ROUND_SIZE
+    ){
+      finishRound();
+
+    }else{
+      showQuestion();
+    }
+
+    return;
+  }
+
+  const item =
+    questions[
+      questionIndex
+    ];
+
+  const answerInput =
+    document.getElementById(
+      "answerInput"
+    );
+
+  const feedback =
+    document.getElementById(
+      "feedback"
+    );
+
+  const result =
+    validateAnswer(
+      item,
+      answerInput.value
+    );
+
+  if(!result.valid){
+    feedback.textContent =
+      result.message;
+
+    feedback.className =
+      "feedback hint";
+
+    answerInput.focus();
+
+    return;
+  }
+
+  checked =
+    true;
+
+  answerInput.disabled =
+    true;
+
+  if(result.correct){
+    correctCount++;
+
+    feedback.textContent =
+      "Goed!";
+
+    feedback.className =
+      "feedback good";
+
+  }else{
+    const extra =
+      item.explanation
+        ? ` Berekening: ${item.explanation}.`
+        : "";
+
+    feedback.textContent =
+      `Niet goed. Het juiste antwoord is ` +
+      `${item.answerText} ${item.unit}.` +
+      extra;
+
+    feedback.className =
+      "feedback wrong";
+  }
+
+  document.getElementById(
+    "scoreCounter"
+  ).textContent =
+    `${correctCount} goed`;
+
+  document.getElementById(
+    "progressFill"
+  ).style.width =
+    `${(questionIndex + 1) / ROUND_SIZE * 100}%`;
+
+  document.getElementById(
+    "actionBtn"
+  ).textContent =
+    questionIndex === ROUND_SIZE - 1
+      ? "Bekijk resultaat"
+      : "Volgende";
+}
+
+/* =====================================================
+   RESULTAAT EN OPSLAAN
+===================================================== */
+
+async function finishRound(){
+  document.getElementById(
+    "gamePanel"
+  ).classList.add(
+    "hidden"
+  );
+
+  document.getElementById(
+    "resultPanel"
+  ).classList.remove(
+    "hidden"
+  );
+
+  const passed =
+    correctCount >=
+    PASS_SCORE;
+
+  const percentage =
+    Math.round(
+      correctCount /
+      ROUND_SIZE *
+      100
+    );
+
+  const oldLevel =
+    validLevel(
+      currentData.levels.maten
+    );
+
+  let attempts = [
+    ...currentData.attempts.maten,
+    passed
+  ].slice(-5);
+
+  let advanced =
+    false;
+
+  let completed =
+    false;
+
+  if(
+    passedCount(attempts) >=
+    3
+  ){
+    if(
+      oldLevel <
+      LEVELS.length - 1
+    ){
+      currentData.levels.maten =
+        oldLevel + 1;
+
+      attempts =
+        [];
+
+      advanced =
+        true;
+
+    }else{
+      completed =
+        true;
+    }
+  }
+
+  currentData.attempts.maten =
+    attempts;
+
+  setLocalData(
+    currentData
+  );
+
+  renderOverview();
+
+  document.getElementById(
+    "resultScore"
+  ).textContent =
+    `${correctCount}/${ROUND_SIZE}`;
+
+  document.getElementById(
+    "resultStars"
+  ).textContent =
+    stars(attempts);
+
+  if(advanced){
+    document.getElementById(
+      "resultTitle"
+    ).textContent =
+      "Niveau behaald! 🎉";
+
+    document.getElementById(
+      "resultText"
+    ).textContent =
+      `Je had ${correctCount} van de ${ROUND_SIZE} goed. ` +
+      `Je gaat verder met niveau ${oldLevel + 2}: ` +
+      `${LEVELS[oldLevel + 1].name}.`;
+
+  }else if(completed){
+    document.getElementById(
+      "resultTitle"
+    ).textContent =
+      "Alle niveaus behaald! 🎉";
+
+    document.getElementById(
+      "resultText"
+    ).textContent =
+      `Je had ${correctCount} van de ${ROUND_SIZE} goed ` +
+      `en hebt alle niveaus afgerond.`;
+
+  }else if(passed){
+    document.getElementById(
+      "resultTitle"
+    ).textContent =
+      "Ronde behaald! ✅";
+
+    document.getElementById(
+      "resultText"
+    ).textContent =
+      `Je had ${correctCount} van de ${ROUND_SIZE} goed. ` +
+      `Deze ronde telt mee voor je drie behaalde rondes.`;
+
+  }else{
+    document.getElementById(
+      "resultTitle"
+    ).textContent =
+      "Blijf oefenen";
+
+    document.getElementById(
+      "resultText"
+    ).textContent =
+      `Je had ${correctCount} van de ${ROUND_SIZE} goed. ` +
+      `Voor een behaalde ronde heb je minimaal ` +
+      `${PASS_SCORE} goede antwoorden nodig.`;
+  }
+
+  const saveStatus =
+    document.getElementById(
+      "saveStatus"
+    );
+
+  saveStatus.textContent =
+    "Voortgang opslaan…";
+
+  try{
+    const response =
+      await sheetsSetMaten(
+        currentData,
+        percentage
+      );
+
+    if(
+      !response ||
+      response.ok !== true
+    ){
+      throw new Error(
+        response?.error ||
+        "Opslaan mislukt"
+      );
+    }
+
+    saveStatus.textContent =
+      "Voortgang opgeslagen in Google Sheets ✅";
+
+  }catch(error){
+    saveStatus.textContent =
+      "Google Sheets was niet bereikbaar. " +
+      "De voortgang staat wel lokaal opgeslagen.";
+  }
+}
+
+document.getElementById(
+  "startBtn"
+).addEventListener(
+  "click",
+  startRound
+);
+
+document.getElementById(
+  "againBtn"
+).addEventListener(
+  "click",
+  startRound
+);
+
+document.getElementById(
+  "actionBtn"
+).addEventListener(
+  "click",
+  handleAction
+);
+
+document.getElementById(
+  "answerInput"
+).addEventListener(
+  "keydown",
+  event => {
+    if(event.key === "Enter"){
+      handleAction();
+    }
+  }
+);
+
+loadData();
+</script>
+</body>
+</html>
