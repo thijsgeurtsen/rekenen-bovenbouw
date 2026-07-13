@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Rekenen bovenbouw – Menu</title>
+
+  <style>
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:system-ui,sans-serif;
+      background:#f4f6ff;
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+
+    .box{
+      background:#fff;
+      padding:2rem 2.2rem;
+      border-radius:1.5rem;
+      box-shadow:0 10px 30px rgba(0,0,0,.1);
+      max-width:950px;
+      width:100%;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      flex-wrap:wrap;
+      margin-bottom:1rem;
+    }
+
+    h1{
+      margin:.2rem 0;
+      font-size:2rem;
+    }
+
+    .pill{
+      display:inline-block;
+      padding:.35rem .7rem;
+      border-radius:999px;
+      background:#eef2ff;
+      font-weight:900;
+      margin:.2rem;
+    }
+
+    .status{
+      font-size:.9rem;
+      color:#555;
+      margin-top:.15rem;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:1rem;
+      margin-top:1.2rem;
+    }
+
+    .card{
+      background:#f7f8ff;
+      border:1px solid #e6e8ff;
+      border-radius:1.2rem;
+      padding:1.2rem;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .card h2{
+      margin:.1rem 0 .5rem;
+      font-size:1.25rem;
+    }
+
+    .description{
+      color:#555;
+      font-size:.9rem;
+      line-height:1.4;
+      min-height:2.6em;
+      margin-bottom:.7rem;
+    }
+
+    .level{
+      font-weight:900;
+      font-size:1.05rem;
+      margin:.2rem 0;
+    }
+
+    .stars{
+      font-size:1.35rem;
+      letter-spacing:.08rem;
+      margin:.25rem 0;
+      color:#f59e0b;
+      min-height:1.7rem;
+    }
+
+    .attempts{
+      color:#555;
+      font-size:.9rem;
+      min-height:1.5rem;
+      margin-bottom:.9rem;
+    }
+
+    .btn{
+      display:inline-block;
+      border:none;
+      border-radius:999px;
+      padding:.8rem 1rem;
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      text-align:center;
+      margin-top:auto;
+    }
+
+    .primary{
+      background:#4f46e5;
+      color:#fff;
+    }
+
+    .primary:hover{
+      background:#4338ca;
+    }
+
+    .dark{
+      background:#0f172a;
+      color:#fff;
+    }
+
+    .dark:hover{
+      background:#1e293b;
+    }
+
+    .row{
+      display:flex;
+      gap:.6rem;
+      flex-wrap:wrap;
+      margin-top:1rem;
+      align-items:center;
+    }
+
+    .small{
+      font-size:.85rem;
+      color:#666;
+      line-height:1.4;
+    }
+
+    input{
+      font-size:1rem;
+      padding:.7rem .8rem;
+      border-radius:.9rem;
+      border:2px solid #cfcfe6;
+      outline:none;
+      max-width:220px;
+    }
+
+    input:focus{
+      border-color:#4f46e5;
+      box-shadow:0 0 0 3px rgba(79,70,229,.15);
+    }
+
+    .sep{
+      height:1px;
+      background:#ececff;
+      margin:1.3rem 0;
+    }
+
+    a.link{
+      color:#4f46e5;
+      font-weight:900;
+      text-decoration:none;
+    }
+
+    a.link:hover{
+      text-decoration:underline;
+    }
+
+    @media(max-width:600px){
+      .box{
+        padding:1.4rem;
+      }
+
+      h1{
+        font-size:1.65rem;
+      }
+
+      .grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="box">
+
+    <div class="top">
+      <div>
+        <h1>Rekenen bovenbouw</h1>
+        <div class="status" id="sheetStatus">
+          Sheets: verbinden…
+        </div>
+      </div>
+
+      <div>
+        <span class="pill" id="who">
+          Leerling: —
+        </span>
+
+        <span class="pill" id="whichClass">
+          Klas: —
+        </span>
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <section class="card">
+        <h2>Breuken</h2>
+
+        <div class="description">
+          Oefen bewerkingen met breuken en gemengde getallen.
+        </div>
+
+        <div class="level" id="levelBreuken">
+          Niveau: laden…
+        </div>
+
+        <div class="stars" id="starsBreuken">
+          ☆☆☆
+        </div>
+
+        <div class="attempts" id="attemptsBreuken">
+          Laatste pogingen: —
+        </div>
+
+        <a class="btn primary" href="breuken.html">
+          Start breuken
+        </a>
+      </section>
+
+      <section class="card">
+        <h2>Kommagetallen</h2>
+
+        <div class="description">
+          Oefen rekenen met tienden, honderdsten en duizendsten.
+        </div>
+
+        <div class="level" id="levelKommagetallen">
+          Niveau: laden…
+        </div>
+
+        <div class="stars" id="starsKommagetallen">
+          ☆☆☆
+        </div>
+
+        <div class="attempts" id="attemptsKommagetallen">
+          Laatste pogingen: —
+        </div>
+
+        <a class="btn primary" href="kommagetallen.html">
+          Start kommagetallen
+        </a>
+      </section>
+
+      <section class="card">
+        <h2>Procenten en verhoudingen</h2>
+
+        <div class="description">
+          Oefen percentages, korting en verhoudingstabellen.
+        </div>
+
+        <div class="level" id="levelProcenten">
+          Niveau: laden…
+        </div>
+
+        <div class="stars" id="starsProcenten">
+          ☆☆☆
+        </div>
+
+        <div class="attempts" id="attemptsProcenten">
+          Laatste pogingen: —
+        </div>
+
+        <a class="btn primary" href="procenten.html">
+          Start procenten
+        </a>
+      </section>
+
+      <section class="card">
+        <h2>Maten en formules</h2>
+
+        <div class="description">
+          Oefen maten omrekenen, oppervlakte, omtrek en inhoud.
+        </div>
+
+        <div class="level" id="levelMaten">
+          Niveau: laden…
+        </div>
+
+        <div class="stars" id="starsMaten">
+          ☆☆☆
+        </div>
+
+        <div class="attempts" id="attemptsMaten">
+          Laatste pogingen: —
+        </div>
+
+        <a class="btn primary" href="maten.html">
+          Start maten en formules
+        </a>
+      </section>
+
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="row">
+      <a class="link" href="index.html">
+        Andere leerling kiezen
+      </a>
+    </div>
+
+    <div class="sep"></div>
+
+    <section class="card">
+      <h2>Leerkracht</h2>
+
+      <div class="small">
+        Hiermee zet je de niveaus en behaalde rondes van deze
+        leerling terug naar het begin.
+      </div>
+
+      <div class="row">
+        <input
+          id="teacherPin"
+          type="password"
+          placeholder="Pincode"
+          inputmode="numeric"
+          autocomplete="off"
+        >
+
+        <button
+          class="btn dark"
+          id="resetSheetsBtn"
+          type="button"
+        >
+          Voortgang resetten
+        </button>
+      </div>
+
+      <div
+        class="small"
+        id="teacherMsg"
+        style="margin-top:.6rem"
+      ></div>
+    </section>
+
+  </main>
+
+<script>
+/* ==========================================
+   A. INSTELLINGEN
+========================================== */
+
+/*
+  Vul hier later de nieuwe Apps Script-URL in
+  die bij Rekenen bovenbouw hoort.
+*/
+const SHEETS_EXEC_URL =
+  "PLAK_HIER_DE_NIEUWE_APPS_SCRIPT_URL";
+
+/*
+  Verander deze pincode eventueel.
+  Let op: een pincode in HTML is niet volledig beveiligd.
+*/
+const TEACHER_PIN = "1234";
+
+
+/* ==========================================
+   B. OPSLAGCODES REKENEN BOVENBOUW
+========================================== */
+
+const STORAGE_CURRENT =
+  "rekenen_bovenbouw_current_student_v1";
+
+const STORAGE_CLASS =
+  "rekenen_bovenbouw_current_class_v1";
+
+const STORAGE_CODE =
+  "rekenen_bovenbouw_current_code_v1";
+
+const STORAGE_DATA_PREFIX =
+  "rekenen_bovenbouw_data_v1_";
+
+
+/* ==========================================
+   C. INGELOGDE LEERLING
+========================================== */
+
+const studentId =
+  (localStorage.getItem(STORAGE_CURRENT) || "").trim();
+
+const studentClass =
+  (localStorage.getItem(STORAGE_CLASS) || "").trim();
+
+const studentCode =
+  (localStorage.getItem(STORAGE_CODE) || "").trim();
+
+if(!studentId || !studentClass || !studentCode){
+  window.location.href = "index.html";
+}
+
+document.getElementById("who").textContent =
+  `Leerling: ${studentId}`;
+
+document.getElementById("whichClass").textContent =
+  `Klas: ${studentClass}`;
+
+
+/* ==========================================
+   D. STANDAARDGEGEVENS
+========================================== */
+
+function createDefaultData(){
+  return {
+    v: 1,
+    id: studentId,
+    klas: studentClass,
+    code: studentCode,
+
+    levels: {
+      breuken: 0,
+      kommagetallen: 0,
+      procenten: 0,
+      maten: 0
+    },
+
+    attempts: {
+      breuken: [],
+      kommagetallen: [],
+      procenten: [],
+      maten: []
+    }
+  };
+}
+
+
+/* ==========================================
+   E. LOKALE BACK-UP
+========================================== */
+
+function dataKey(){
+  return (
+    STORAGE_DATA_PREFIX +
+    studentClass +
+    "__" +
+    studentId
+  );
+}
+
+function getLocalData(){
+  const raw =
+    localStorage.getItem(dataKey());
+
+  if(!raw){
+    return createDefaultData();
+  }
+
+  try{
+    const parsed =
+      JSON.parse(raw);
+
+    return normaliseerData(parsed);
+
+  }catch(error){
+    return createDefaultData();
+  }
+}
+
+function setLocalData(data){
+  localStorage.setItem(
+    dataKey(),
+    JSON.stringify(normaliseerData(data))
+  );
+}
+
+
+/* ==========================================
+   F. GEGEVENS CONTROLEREN
+========================================== */
+
+const ONDERDELEN = [
+  "breuken",
+  "kommagetallen",
+  "procenten",
+  "maten"
+];
+
+function maakGeldigLevel(value){
+  const level = Number(value);
+
+  if(!Number.isFinite(level) || level < 0){
+    return 0;
+  }
+
+  return Math.floor(level);
+}
+
+function normaliseerPogingen(value){
+  let pogingen = value;
+
+  /*
+    Het Apps Script kan eventueel een tekst teruggeven,
+    bijvoorbeeld: "1,0,1".
+  */
+  if(typeof pogingen === "string"){
+    pogingen = pogingen
+      .split(",")
+      .filter(item => item !== "");
+  }
+
+  if(!Array.isArray(pogingen)){
+    return [];
+  }
+
+  return pogingen
+    .map(item => {
+      return (
+        item === true ||
+        item === 1 ||
+        item === "1" ||
+        item === "true"
+      );
+    })
+    .slice(-5);
+}
+
+function normaliseerData(data){
+  const standaard =
+    createDefaultData();
+
+  if(!data || typeof data !== "object"){
+    return standaard;
+  }
+
+  ONDERDELEN.forEach(onderdeel => {
+    standaard.levels[onderdeel] =
+      maakGeldigLevel(
+        data.levels?.[onderdeel]
+      );
+
+    standaard.attempts[onderdeel] =
+      normaliseerPogingen(
+        data.attempts?.[onderdeel]
+      );
+  });
+
+  return standaard;
+}
+
+
+/* ==========================================
+   G. API CONTROLEREN
+========================================== */
+
+function apiIsIngesteld(){
+  return (
+    SHEETS_EXEC_URL.startsWith(
+      "https://script.google.com/"
+    ) &&
+    SHEETS_EXEC_URL.includes("/exec")
+  );
+}
+
+
+/* ==========================================
+   H. JSONP
+========================================== */
+
+let jsonpSequence = 0;
+
+function jsonp(url){
+  return new Promise((resolve, reject) => {
+    const callbackName =
+      "__bovenbouwMenuCallback_" +
+      (++jsonpSequence) +
+      "_" +
+      Date.now();
+
+    const script =
+      document.createElement("script");
+
+    const cleanup = () => {
+      try{
+        delete window[callbackName];
+      }catch(error){
+        // Geen actie nodig.
+      }
+
+      script.remove();
+    };
+
+    window[callbackName] = data => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(
+        new Error("JSONP-aanroep mislukt.")
+      );
+    };
+
+    const separator =
+      url.includes("?") ? "&" : "?";
+
+    script.src =
+      url +
+      separator +
+      "callback=" +
+      encodeURIComponent(callbackName);
+
+    document.body.appendChild(script);
+  });
+}
+
+
+/* ==========================================
+   I. GEGEVENS OPHALEN UIT SHEETS
+========================================== */
+
+async function sheetsGet(klas, naam, code){
+  const url =
+    `${SHEETS_EXEC_URL}?action=get` +
+    `&klas=${encodeURIComponent(klas)}` +
+    `&naam=${encodeURIComponent(naam)}` +
+    `&code=${encodeURIComponent(code)}`;
+
+  return await jsonp(url);
+}
+
+
+/* ==========================================
+   J. GEGEVENS OPSLAAN IN SHEETS
+========================================== */
+
+async function sheetsSet(klas, naam, code, data){
+  const url =
+    `${SHEETS_EXEC_URL}?action=set` +
+
+    `&klas=${encodeURIComponent(klas)}` +
+    `&naam=${encodeURIComponent(naam)}` +
+    `&code=${encodeURIComponent(code)}` +
+
+    `&breuken=${encodeURIComponent(
+      data.levels.breuken
+    )}` +
+
+    `&kommagetallen=${encodeURIComponent(
+      data.levels.kommagetallen
+    )}` +
+
+    `&procenten=${encodeURIComponent(
+      data.levels.procenten
+    )}` +
+
+    `&maten=${encodeURIComponent(
+      data.levels.maten
+    )}` +
+
+    `&pogingenBreuken=${encodeURIComponent(
+      data.attempts.breuken
+        .map(Boolean)
+        .map(Number)
+        .join(",")
+    )}` +
+
+    `&pogingenKommagetallen=${encodeURIComponent(
+      data.attempts.kommagetallen
+        .map(Boolean)
+        .map(Number)
+        .join(",")
+    )}` +
+
+    `&pogingenProcenten=${encodeURIComponent(
+      data.attempts.procenten
+        .map(Boolean)
+        .map(Number)
+        .join(",")
+    )}` +
+
+    `&pogingenMaten=${encodeURIComponent(
+      data.attempts.maten
+        .map(Boolean)
+        .map(Number)
+        .join(",")
+    )}`;
+
+  return await jsonp(url);
+}
+
+
+/* ==========================================
+   K. WEERGAVE VAN STERREN EN POGINGEN
+========================================== */
+
+function telBehaaldeRondes(pogingen){
+  return Math.min(
+    pogingen.filter(Boolean).length,
+    3
+  );
+}
+
+function maakSterren(pogingen){
+  const behaald =
+    telBehaaldeRondes(pogingen);
+
+  return (
+    "★".repeat(behaald) +
+    "☆".repeat(3 - behaald)
+  );
+}
+
+function maakPogingenTekst(pogingen){
+  if(!pogingen.length){
+    return "Laatste pogingen: nog niet gespeeld";
+  }
+
+  const symbolen =
+    pogingen.map(poging => {
+      return poging ? "✓" : "✗";
+    });
+
+  return (
+    "Laatste pogingen: " +
+    symbolen.join(" ")
+  );
+}
+
+
+/* ==========================================
+   L. ONDERDEEL TONEN
+========================================== */
+
+function renderOnderdeel(
+  data,
+  onderdeel,
+  levelElementId,
+  starsElementId,
+  attemptsElementId
+){
+  const level =
+    maakGeldigLevel(
+      data.levels[onderdeel]
+    );
+
+  const pogingen =
+    normaliseerPogingen(
+      data.attempts[onderdeel]
+    );
+
+  document.getElementById(
+    levelElementId
+  ).textContent =
+    `Niveau ${level + 1}`;
+
+  document.getElementById(
+    starsElementId
+  ).textContent =
+    maakSterren(pogingen);
+
+  document.getElementById(
+    attemptsElementId
+  ).textContent =
+    maakPogingenTekst(pogingen);
+}
+
+function render(data){
+  const geldig =
+    normaliseerData(data);
+
+  renderOnderdeel(
+    geldig,
+    "breuken",
+    "levelBreuken",
+    "starsBreuken",
+    "attemptsBreuken"
+  );
+
+  renderOnderdeel(
+    geldig,
+    "kommagetallen",
+    "levelKommagetallen",
+    "starsKommagetallen",
+    "attemptsKommagetallen"
+  );
+
+  renderOnderdeel(
+    geldig,
+    "procenten",
+    "levelProcenten",
+    "starsProcenten",
+    "attemptsProcenten"
+  );
+
+  renderOnderdeel(
+    geldig,
+    "maten",
+    "levelMaten",
+    "starsMaten",
+    "attemptsMaten"
+  );
+}
+
+
+/* ==========================================
+   M. EERST LOKALE GEGEVENS TONEN
+========================================== */
+
+let currentData =
+  getLocalData();
+
+function renderFromLocalFirst(){
+  currentData =
+    getLocalData();
+
+  render(currentData);
+}
+
+
+/* ==========================================
+   N. GEGEVENS LADEN UIT GOOGLE SHEETS
+========================================== */
+
+async function loadFromSheets(){
+  const status =
+    document.getElementById("sheetStatus");
+
+  if(!apiIsIngesteld()){
+    status.textContent =
+      "Sheets: nieuwe Apps Script-URL nog niet ingevuld.";
+
+    renderFromLocalFirst();
+    return;
+  }
+
+  status.textContent =
+    "Sheets: laden…";
+
+  try{
+    const response =
+      await sheetsGet(
+        studentClass,
+        studentId,
+        studentCode
+      );
+
+    if(!response || response.ok !== true){
+      throw new Error(
+        response?.error ||
+        "Onverwacht antwoord."
+      );
+    }
+
+    /*
+      Het Apps Script mag de gegevens teruggeven als:
+
+      {
+        ok: true,
+        data: {
+          levels: {...},
+          attempts: {...}
+        }
+      }
+
+      De code accepteert ook:
+      {
+        ok: true,
+        levels: {...},
+        attempts: {...}
+      }
+    */
+    const ontvangenData =
+      response.data || {
+        levels: response.levels,
+        attempts: response.attempts
+      };
+
+    currentData =
+      normaliseerData(ontvangenData);
+
+    setLocalData(currentData);
+    render(currentData);
+
+    status.textContent =
+      "Sheets: verbonden ✅";
+
+  }catch(error){
+    status.textContent =
+      "Sheets: niet bereikbaar; lokale back-up gebruikt.";
+
+    renderFromLocalFirst();
+  }
+}
+
+
+/* ==========================================
+   O. VOORTGANG RESETTEN
+========================================== */
+
+document
+  .getElementById("resetSheetsBtn")
+  .addEventListener("click", async () => {
+    const message =
+      document.getElementById("teacherMsg");
+
+    const enteredPin =
+      (
+        document.getElementById("teacherPin").value ||
+        ""
+      ).trim();
+
+    if(!TEACHER_PIN){
+      message.textContent =
+        "De resetfunctie staat uit.";
+
+      return;
+    }
+
+    if(enteredPin !== TEACHER_PIN){
+      message.textContent =
+        "Pincode klopt niet.";
+
+      return;
+    }
+
+    const confirmed =
+      confirm(
+        `Weet je zeker dat je de voortgang van ` +
+        `"${studentId}" uit "${studentClass}" wilt resetten?`
+      );
+
+    if(!confirmed){
+      message.textContent =
+        "Reset geannuleerd.";
+
+      return;
+    }
+
+    const newData =
+      createDefaultData();
+
+    message.textContent =
+      "Voortgang resetten…";
+
+    try{
+      if(apiIsIngesteld()){
+        const response =
+          await sheetsSet(
+            studentClass,
+            studentId,
+            studentCode,
+            newData
+          );
+
+        if(!response || response.ok !== true){
+          throw new Error(
+            response?.error ||
+            "Reset mislukt."
+          );
+        }
+      }
+
+      currentData =
+        newData;
+
+      setLocalData(currentData);
+      render(currentData);
+
+      message.textContent =
+        "Voortgang is gereset ✅";
+
+      if(apiIsIngesteld()){
+        await loadFromSheets();
+      }
+
+    }catch(error){
+      message.textContent =
+        "Resetten in Google Sheets is mislukt.";
+    }
+  });
+
+
+/* ==========================================
+   P. START
+========================================== */
+
+renderFromLocalFirst();
+loadFromSheets();
+</script>
+</body>
+</html>
