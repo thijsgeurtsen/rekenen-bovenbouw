@@ -1,0 +1,2773 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Kommagetallen – Rekenen bovenbouw</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  font-family:system-ui,sans-serif;
+  background:#f4f6ff;
+  margin:0;
+  min-height:100vh;
+  padding:20px;
+  color:#111827;
+}
+
+.app{
+  width:min(920px,100%);
+  margin:auto;
+  background:#fff;
+  border-radius:1.6rem;
+  box-shadow:0 10px 30px #0002;
+  padding:1.5rem;
+}
+
+.top,
+.row,
+.gamehead,
+.footer{
+  display:flex;
+  gap:.8rem;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.top,
+.gamehead,
+.footer{
+  justify-content:space-between;
+}
+
+.top{
+  align-items:flex-start;
+}
+
+h1{
+  margin:0;
+  font-size:2rem;
+}
+
+.sub,
+.status{
+  color:#64748b;
+}
+
+.sub{
+  margin:.25rem 0;
+}
+
+.status{
+  font-size:.88rem;
+}
+
+.pill{
+  padding:.4rem .75rem;
+  border-radius:999px;
+  background:#eef2ff;
+  font-weight:800;
+}
+
+.overview{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:.8rem;
+  margin:1.2rem 0;
+}
+
+.card,
+.panel{
+  border:1px solid #e5e7ff;
+  background:#f8f9ff;
+  border-radius:1rem;
+  padding:1rem;
+}
+
+.panel{
+  background:#fbfcff;
+  border-radius:1.25rem;
+  margin-top:1rem;
+  padding:1.25rem;
+}
+
+.label{
+  font-size:.78rem;
+  color:#64748b;
+  text-transform:uppercase;
+  font-weight:800;
+}
+
+.value{
+  margin-top:.25rem;
+  font-weight:900;
+}
+
+.stars{
+  font-size:1.35rem;
+  color:#f59e0b;
+  letter-spacing:.08em;
+}
+
+.rules{
+  background:#eef2ff;
+  border-radius:1rem;
+  padding:.9rem 1rem;
+  color:#3730a3;
+  font-weight:650;
+  line-height:1.5;
+}
+
+.btn{
+  border:0;
+  border-radius:999px;
+  padding:.85rem 1.2rem;
+  font-size:1rem;
+  font-weight:900;
+  cursor:pointer;
+  text-decoration:none;
+  text-align:center;
+}
+
+.btn:disabled{
+  opacity:.55;
+  cursor:default;
+}
+
+.primary{
+  background:#4f46e5;
+  color:#fff;
+}
+
+.secondary{
+  background:#e2e8f0;
+  color:#0f172a;
+}
+
+.track{
+  height:12px;
+  background:#e2e8f0;
+  border-radius:999px;
+  overflow:hidden;
+  margin:1rem 0;
+}
+
+.fill{
+  height:100%;
+  background:#4f46e5;
+  transition:width .25s;
+}
+
+.questionwrap{
+  min-height:230px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:1rem;
+}
+
+.question{
+  width:100%;
+  font-size:clamp(1.4rem,5vw,2.4rem);
+  font-weight:850;
+  line-height:1.4;
+}
+
+.big{
+  font-size:clamp(2rem,7vw,3.7rem);
+  font-weight:900;
+}
+
+.smallquestion{
+  font-size:clamp(1.35rem,4vw,2rem);
+  margin-bottom:.8rem;
+}
+
+.placecard,
+.relationcard{
+  width:min(620px,100%);
+  margin:1rem auto;
+  background:#fff;
+  border:1px solid #dbe3ff;
+  border-radius:1rem;
+  padding:1rem;
+}
+
+.placeline{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:.8rem;
+  align-items:center;
+  font-size:1.15rem;
+}
+
+.placebox{
+  padding:.8rem;
+  border-radius:.8rem;
+  background:#eef2ff;
+  font-weight:900;
+}
+
+.arrow{
+  color:#4f46e5;
+  font-size:1.5rem;
+  font-weight:950;
+}
+
+.relationline{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:1rem;
+  flex-wrap:wrap;
+  font-size:clamp(1.8rem,6vw,3rem);
+  font-weight:900;
+}
+
+.frac{
+  display:inline-grid;
+  grid-template-rows:auto auto;
+  vertical-align:middle;
+  text-align:center;
+  line-height:1.05;
+  margin:0 .1em;
+}
+
+.frac span:first-child{
+  border-bottom:2px solid;
+  padding:0 .16em .07em;
+}
+
+.answerarea{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:.7rem;
+  flex-wrap:wrap;
+}
+
+.answer{
+  width:min(290px,100%);
+  font-size:1.35rem;
+  padding:.85rem 1rem;
+  border:2px solid #c7d2fe;
+  border-radius:1rem;
+  outline:none;
+  text-align:center;
+}
+
+.answer:focus{
+  border-color:#4f46e5;
+  box-shadow:0 0 0 4px #4f46e524;
+}
+
+.unit{
+  font-size:1.2rem;
+  font-weight:900;
+  min-width:1.5rem;
+}
+
+.feedback{
+  min-height:2rem;
+  margin-top:.9rem;
+  text-align:center;
+  font-weight:850;
+}
+
+.good{
+  color:#15803d;
+}
+
+.wrong{
+  color:#b91c1c;
+}
+
+.hint{
+  color:#475569;
+}
+
+.result{
+  font-size:3rem;
+  font-weight:950;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.footer{
+  margin-top:1.2rem;
+  padding-top:1rem;
+  border-top:1px solid #eef2ff;
+}
+
+.link{
+  color:#4f46e5;
+  font-weight:850;
+  text-decoration:none;
+}
+
+@media(max-width:600px){
+  body{
+    padding:10px;
+  }
+
+  .app{
+    padding:1rem;
+  }
+
+  .answer,
+  .answerarea .btn{
+    width:100%;
+  }
+
+  .questionwrap{
+    min-height:200px;
+    padding:.4rem;
+  }
+
+  .placeline{
+    grid-template-columns:1fr;
+  }
+
+  .arrow{
+    transform:rotate(90deg);
+  }
+
+  .unit{
+    width:100%;
+    text-align:center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="app">
+
+<div class="top">
+
+  <div>
+    <h1>Kommagetallen</h1>
+
+    <div class="sub" id="subtitle">
+      Niveau laden…
+    </div>
+
+    <div class="status" id="sheetStatus">
+      Sheets: verbinden…
+    </div>
+  </div>
+
+  <div class="row">
+
+    <span class="pill" id="who">
+      Leerling: —
+    </span>
+
+    <span class="pill" id="whichClass">
+      Klas: —
+    </span>
+
+  </div>
+
+</div>
+
+<section class="overview">
+
+  <div class="card">
+    <div class="label">Huidig niveau</div>
+    <div class="value" id="levelValue">—</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Behaalde rondes</div>
+    <div class="value stars" id="stars">☆☆☆</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Laatste pogingen</div>
+    <div class="value" id="attempts">
+      Nog niet gespeeld
+    </div>
+  </div>
+
+</section>
+
+<section class="panel" id="intro">
+
+  <h2 id="introTitle">
+    Even laden…
+  </h2>
+
+  <p id="introText"></p>
+
+  <div class="rules">
+    Een ronde heeft 10 opgaven. Met 9 of 10 goede antwoorden
+    behaal je een ronde. Drie behaalde rondes binnen de laatste
+    vijf pogingen openen het volgende niveau.
+  </div>
+
+  <p>
+    Typ altijd zelf het antwoord. Een komma en een punt worden
+    allebei geaccepteerd. Bij breuken typ je bijvoorbeeld
+    <code>1/2</code>. Een breuk moet volledig vereenvoudigd zijn.
+  </p>
+
+  <div class="row">
+
+    <button
+      class="btn primary"
+      id="start"
+      type="button"
+      disabled
+    >
+      Gegevens laden…
+    </button>
+
+    <a class="btn secondary" href="menu.html">
+      Terug naar menu
+    </a>
+
+  </div>
+
+</section>
+
+<section class="panel hidden" id="game">
+
+  <div class="gamehead">
+
+    <b id="counter">
+      Opgave 1 van 10
+    </b>
+
+    <b id="score">
+      0 goed
+    </b>
+
+  </div>
+
+  <div class="track">
+    <div class="fill" id="progress"></div>
+  </div>
+
+  <div class="rules" id="instruction"></div>
+
+  <div class="questionwrap">
+    <div class="question" id="question"></div>
+  </div>
+
+  <div class="answerarea">
+
+    <input
+      class="answer"
+      id="input"
+      type="text"
+      inputmode="decimal"
+      autocomplete="off"
+      placeholder="Jouw antwoord"
+    >
+
+    <span class="unit" id="unit"></span>
+
+    <button
+      class="btn primary"
+      id="action"
+      type="button"
+    >
+      Controleer
+    </button>
+
+  </div>
+
+  <div class="feedback" id="feedback"></div>
+
+</section>
+
+<section class="panel hidden" id="resultPanel">
+
+  <h2 id="resultTitle">
+    Ronde klaar
+  </h2>
+
+  <div class="result" id="resultScore">
+    0/10
+  </div>
+
+  <p id="resultText"></p>
+
+  <div class="stars" id="resultStars">
+    ☆☆☆
+  </div>
+
+  <div class="status" id="saveStatus"></div>
+
+  <div class="row" style="margin-top:1rem">
+
+    <button
+      class="btn primary"
+      id="again"
+      type="button"
+    >
+      Nog een ronde
+    </button>
+
+    <a class="btn secondary" href="menu.html">
+      Terug naar menu
+    </a>
+
+  </div>
+
+</section>
+
+<div class="footer">
+
+  <a class="link" href="menu.html">
+    ← Rekenen bovenbouw
+  </a>
+
+  <span class="status">
+    Minimaal 90% goed = ronde behaald
+  </span>
+
+</div>
+
+</main>
+
+<script>
+const API =
+  "https://script.google.com/macros/s/AKfycbyqp-Dl5JSdeCvL1qti_cbjwoKUmuXTc3FnKSwQnhvArEHbO_Df7mH30RWaT6uov3E/exec";
+
+const SC =
+  "rekenen_bovenbouw_current_student_v1";
+
+const SK =
+  "rekenen_bovenbouw_current_class_v1";
+
+const SO =
+  "rekenen_bovenbouw_current_code_v1";
+
+const SD =
+  "rekenen_bovenbouw_data_v1_";
+
+const ROUND_SIZE =
+  10;
+
+const PASS_SCORE =
+  9;
+
+const LEVELS = [
+
+  [
+    "Optellen en aftrekken met tienden zonder overschrijding",
+
+    "Reken met tienden zonder over een heel getal heen te gaan.",
+
+    "Let op de hele getallen en de tienden. " +
+    "Er hoeft niet geleend te worden."
+  ],
+
+  [
+    "Optellen en aftrekken met tienden met overschrijding",
+
+    "Reken met tienden waarbij je over een heel getal heen " +
+    "gaat of moet lenen.",
+
+    "Zet de komma's onder elkaar en reken zorgvuldig."
+  ],
+
+  [
+    "Optellen en aftrekken met honderdsten",
+
+    "Reken met getallen met twee cijfers achter de komma.",
+
+    "Zet de komma's onder elkaar en reken eerst de " +
+    "honderdsten en tienden."
+  ],
+
+  [
+    "Ongelijk aantal decimalen",
+
+    "Reken met getallen die niet evenveel cijfers achter " +
+    "de komma hebben.",
+
+    "Vul denkbeeldig nullen aan, bijvoorbeeld 2,4 = 2,40."
+  ],
+
+  [
+    "Kommagetal, breuk en percentage koppelen",
+
+    "Koppel bekende kommagetallen aan breuken en percentages.",
+
+    "Typ het antwoord zelf. Breuken moeten volledig " +
+    "vereenvoudigd zijn, bijvoorbeeld 1/2 en niet 2/4."
+  ],
+
+  [
+    "Vermenigvuldigen met 10, 100 en 1000",
+
+    "Vermenigvuldig kommagetallen met 10, 100 of 1000.",
+
+    "De cijfers schuiven naar links. De komma komt verder " +
+    "naar rechts."
+  ],
+
+  [
+    "Delen door 10, 100 en 1000",
+
+    "Deel getallen door 10, 100 of 1000.",
+
+    "De cijfers schuiven naar rechts. De komma komt verder " +
+    "naar links."
+  ],
+
+  [
+    "Kommagetal × heel getal",
+
+    "Vermenigvuldig een kommagetal met een heel getal.",
+
+    "Reken alsof de komma er niet staat en plaats hem " +
+    "daarna terug."
+  ],
+
+  [
+    "Kommagetal : heel getal",
+
+    "Deel een kommagetal door een heel getal.",
+
+    "De opgaven hebben een nette eindige uitkomst."
+  ],
+
+  [
+    "Kommagetal × kommagetal",
+
+    "Vermenigvuldig twee kommagetallen.",
+
+    "Reken eerst zonder komma's en tel daarna het totale " +
+    "aantal decimalen."
+  ],
+
+  [
+    "Kommagetal : kommagetal",
+
+    "Deel een kommagetal door een kommagetal.",
+
+    "Maak de deler eerst heel door beide getallen met " +
+    "10 of 100 te vermenigvuldigen."
+  ],
+
+  [
+    "Kommagetallen afronden",
+
+    "Rond af op hele getallen, tienden of honderdsten.",
+
+    "Kijk naar het eerstvolgende cijfer. " +
+    "5 of hoger betekent omhoog afronden."
+  ]
+
+];
+
+const student =
+  (
+    localStorage.getItem(SC) ||
+    ""
+  ).trim();
+
+const klass =
+  (
+    localStorage.getItem(SK) ||
+    ""
+  ).trim();
+
+const code =
+  (
+    localStorage.getItem(SO) ||
+    ""
+  ).trim();
+
+if(
+  !student ||
+  !klass ||
+  !code
+){
+  location.href =
+    "index.html";
+}
+
+document
+  .getElementById("who")
+  .textContent =
+    `Leerling: ${student}`;
+
+document
+  .getElementById("whichClass")
+  .textContent =
+    `Klas: ${klass}`;
+
+const defaultData = () => ({
+  levels:{
+    breuken:0,
+    kommagetallen:0,
+    procenten:0,
+    maten:0
+  },
+
+  attempts:{
+    breuken:[],
+    kommagetallen:[],
+    procenten:[],
+    maten:[]
+  }
+});
+
+const dataKey = () => {
+  return (
+    SD +
+    klass +
+    "__" +
+    student
+  );
+};
+
+function normalizeAttempts(value){
+  let list =
+    value;
+
+  if(typeof list === "string"){
+    list =
+      list
+        ? list.split(",")
+        : [];
+  }
+
+  if(!Array.isArray(list)){
+    return [];
+  }
+
+  return list
+    .map(item => {
+      return (
+        item === true ||
+        item === 1 ||
+        item === "1" ||
+        item === "true"
+      );
+    })
+    .slice(-5);
+}
+
+function normalizeData(source){
+  const result =
+    defaultData();
+
+  if(
+    !source ||
+    typeof source !== "object"
+  ){
+    return result;
+  }
+
+  [
+    "breuken",
+    "kommagetallen",
+    "procenten",
+    "maten"
+  ].forEach(part => {
+    const level =
+      Number(
+        source.levels?.[part]
+      );
+
+    result.levels[part] =
+      Number.isFinite(level) &&
+      level >= 0
+        ? Math.floor(level)
+        : 0;
+
+    result.attempts[part] =
+      normalizeAttempts(
+        source.attempts?.[part]
+      );
+  });
+
+  return result;
+}
+
+function getLocalData(){
+  try{
+    return normalizeData(
+      JSON.parse(
+        localStorage.getItem(
+          dataKey()
+        ) ||
+        "null"
+      )
+    );
+
+  }catch(error){
+    return defaultData();
+  }
+}
+
+function setLocalData(source){
+  localStorage.setItem(
+    dataKey(),
+    JSON.stringify(
+      normalizeData(source)
+    )
+  );
+}
+
+function validLevel(value){
+  return Math.min(
+    Math.max(
+      0,
+      Math.floor(
+        Number(value) ||
+        0
+      )
+    ),
+    LEVELS.length - 1
+  );
+}
+
+let jsonpSequence =
+  0;
+
+function jsonp(url){
+  return new Promise((resolve,reject) => {
+    const callback =
+      "__komma_" +
+      (++jsonpSequence) +
+      "_" +
+      Date.now();
+
+    const script =
+      document.createElement("script");
+
+    const timer =
+      setTimeout(() => {
+        cleanup();
+
+        reject(
+          new Error("Timeout")
+        );
+      },12000);
+
+    function cleanup(){
+      clearTimeout(timer);
+
+      try{
+        delete window[callback];
+      }catch(error){
+        // Geen actie nodig.
+      }
+
+      script.remove();
+    }
+
+    window[callback] =
+      response => {
+        cleanup();
+        resolve(response);
+      };
+
+    script.onerror =
+      () => {
+        cleanup();
+
+        reject(
+          new Error("JSONP mislukt")
+        );
+      };
+
+    script.src =
+      url +
+      (
+        url.includes("?")
+          ? "&"
+          : "?"
+      ) +
+      "callback=" +
+      encodeURIComponent(callback);
+
+    document.body.appendChild(
+      script
+    );
+  });
+}
+
+function getSheets(){
+  return jsonp(
+    `${API}?action=get` +
+    `&klas=${encodeURIComponent(klass)}` +
+    `&naam=${encodeURIComponent(student)}` +
+    `&code=${encodeURIComponent(code)}`
+  );
+}
+
+function setSheets(source,score){
+  const attempts =
+    source.attempts.kommagetallen
+      .map(Number)
+      .join(",");
+
+  return jsonp(
+    `${API}?action=set` +
+
+    `&klas=${encodeURIComponent(klass)}` +
+
+    `&naam=${encodeURIComponent(student)}` +
+
+    `&code=${encodeURIComponent(code)}` +
+
+    `&kommagetallen=${encodeURIComponent(
+      source.levels.kommagetallen
+    )}` +
+
+    `&pogingenKommagetallen=${encodeURIComponent(
+      attempts
+    )}` +
+
+    `&onderdeel=kommagetallen` +
+
+    `&score=${encodeURIComponent(score)}`
+  );
+}
+
+function passedCount(attempts){
+  return Math.min(
+    3,
+    normalizeAttempts(attempts)
+      .filter(Boolean)
+      .length
+  );
+}
+
+function stars(attempts){
+  const number =
+    passedCount(attempts);
+
+  return (
+    "★".repeat(number) +
+    "☆".repeat(3 - number)
+  );
+}
+
+function attemptsText(attempts){
+  const list =
+    normalizeAttempts(attempts);
+
+  return list.length
+    ? list
+        .map(item => {
+          return item
+            ? "✓"
+            : "✗";
+        })
+        .join(" ")
+    : "Nog niet gespeeld";
+}
+
+let data =
+  getLocalData();
+
+let ready =
+  false;
+
+let questions =
+  [];
+
+let questionIndex =
+  0;
+
+let correctCount =
+  0;
+
+let checked =
+  false;
+
+function render(){
+  const currentLevel =
+    validLevel(
+      data.levels.kommagetallen
+    );
+
+  const info =
+    LEVELS[currentLevel];
+
+  document
+    .getElementById("subtitle")
+    .textContent =
+      `Niveau ${currentLevel + 1}: ${info[0]}`;
+
+  document
+    .getElementById("levelValue")
+    .textContent =
+      `${currentLevel + 1} van ${LEVELS.length}`;
+
+  document
+    .getElementById("stars")
+    .textContent =
+      stars(
+        data.attempts.kommagetallen
+      );
+
+  document
+    .getElementById("attempts")
+    .textContent =
+      attemptsText(
+        data.attempts.kommagetallen
+      );
+
+  document
+    .getElementById("introTitle")
+    .textContent =
+      `Niveau ${currentLevel + 1}: ${info[0]}`;
+
+  document
+    .getElementById("introText")
+    .textContent =
+      info[1];
+}
+
+async function loadData(){
+  render();
+
+  try{
+    const response =
+      await getSheets();
+
+    if(
+      !response ||
+      response.ok !== true
+    ){
+      throw new Error(
+        response?.error ||
+        "Onverwacht antwoord"
+      );
+    }
+
+    data =
+      normalizeData(
+        response.data || {
+          levels:
+            response.levels,
+
+          attempts:
+            response.attempts
+        }
+      );
+
+    setLocalData(data);
+
+    document
+      .getElementById("sheetStatus")
+      .textContent =
+        "Sheets: verbonden ✅";
+
+  }catch(error){
+    document
+      .getElementById("sheetStatus")
+      .textContent =
+        "Sheets: niet bereikbaar; lokale back-up gebruikt.";
+  }
+
+  render();
+
+  ready =
+    true;
+
+  document
+    .getElementById("start")
+    .disabled =
+      false;
+
+  document
+    .getElementById("start")
+    .textContent =
+      "Start ronde";
+}
+
+function randomInteger(min,max){
+  return (
+    Math.floor(
+      Math.random() *
+      (max - min + 1)
+    ) +
+    min
+  );
+}
+
+function choose(array){
+  return array[
+    randomInteger(
+      0,
+      array.length - 1
+    )
+  ];
+}
+
+function formatNumber(value){
+  const rounded =
+    Math.round(
+      (
+        value +
+        Number.EPSILON
+      ) *
+      1000000
+    ) /
+    1000000;
+
+  return rounded.toLocaleString(
+    "nl-NL",
+    {
+      useGrouping:false,
+      maximumFractionDigits:6
+    }
+  );
+}
+
+function parseNumber(value){
+  const text =
+    String(value || "")
+      .trim()
+      .replace(/\s/g,"")
+      .replace(",",".");
+
+  if(
+    !/^-?\d+(\.\d+)?$/.test(text)
+  ){
+    return null;
+  }
+
+  const number =
+    Number(text);
+
+  return Number.isFinite(number)
+    ? number
+    : null;
+}
+
+function parseFraction(value){
+  const match =
+    String(value || "")
+      .trim()
+      .match(
+        /^(-?\d+)\s*\/\s*(-?\d+)$/
+      );
+
+  if(!match){
+    return null;
+  }
+
+  let numerator =
+    Number(match[1]);
+
+  let denominator =
+    Number(match[2]);
+
+  if(
+    !Number.isInteger(numerator) ||
+    !Number.isInteger(denominator) ||
+    denominator === 0
+  ){
+    return null;
+  }
+
+  if(denominator < 0){
+    numerator *= -1;
+    denominator *= -1;
+  }
+
+  return {
+    numerator,
+    denominator
+  };
+}
+
+function equalNumbers(first,second){
+  return (
+    Math.abs(
+      first -
+      second
+    ) <
+    0.00000001
+  );
+}
+
+function decimal(
+  scaledNumber,
+  decimalPlaces
+){
+  return (
+    scaledNumber /
+    10 ** decimalPlaces
+  );
+}
+
+function fractionHtml(
+  numerator,
+  denominator
+){
+  return (
+    `<span class="frac">` +
+      `<span>${numerator}</span>` +
+      `<span>${denominator}</span>` +
+    `</span>`
+  );
+}
+
+function expression(
+  first,
+  operator,
+  second
+){
+  return (
+    `<div class="big">` +
+      `${formatNumber(first)} ` +
+      `${operator} ` +
+      `${formatNumber(second)} = ?` +
+    `</div>`
+  );
+}
+
+function numberQuestion(
+  html,
+  expected,
+  key,
+  unit = "",
+  explanation = ""
+){
+  return {
+    type:"number",
+    html,
+    expected,
+    key,
+    unit,
+
+    answerText:
+      formatNumber(expected),
+
+    explanation,
+
+    placeholder:
+      "Jouw antwoord"
+  };
+}
+
+function fractionQuestion(
+  html,
+  numerator,
+  denominator,
+  key,
+  explanation = ""
+){
+  return {
+    type:"fraction",
+    html,
+    numerator,
+    denominator,
+    key,
+    unit:"",
+
+    answerText:
+      `${numerator}/${denominator}`,
+
+    explanation,
+
+    placeholder:
+      "Bijvoorbeeld 1/2"
+  };
+}
+
+/* ==========================================
+   NIVEAU 1
+   TIENDEN ZONDER OVERSCHRIJDING
+========================================== */
+
+function generateLevel1(){
+  const addition =
+    Math.random() < .5;
+
+  const wholeFirst =
+    randomInteger(1,8);
+
+  const tenthFirst =
+    randomInteger(1,8);
+
+  if(addition){
+    const wholeSecond =
+      randomInteger(
+        0,
+        Math.max(
+          0,
+          8 - wholeFirst
+        )
+      );
+
+    const tenthSecond =
+      randomInteger(
+        0,
+        9 - tenthFirst
+      );
+
+    const first =
+      wholeFirst +
+      tenthFirst / 10;
+
+    const second =
+      wholeSecond +
+      tenthSecond / 10;
+
+    return numberQuestion(
+      expression(
+        first,
+        "+",
+        second
+      ),
+
+      first + second,
+
+      `1-plus-${first}-${second}`
+    );
+  }
+
+  const wholeSecond =
+    randomInteger(
+      0,
+      wholeFirst
+    );
+
+  const tenthSecond =
+    randomInteger(
+      0,
+      tenthFirst
+    );
+
+  if(
+    wholeSecond === wholeFirst &&
+    tenthSecond === tenthFirst
+  ){
+    return generateLevel1();
+  }
+
+  const first =
+    wholeFirst +
+    tenthFirst / 10;
+
+  const second =
+    wholeSecond +
+    tenthSecond / 10;
+
+  return numberQuestion(
+    expression(
+      first,
+      "−",
+      second
+    ),
+
+    first - second,
+
+    `1-min-${first}-${second}`
+  );
+}
+
+/* ==========================================
+   NIVEAU 2
+   TIENDEN MET OVERSCHRIJDING
+========================================== */
+
+function generateLevel2(){
+  if(Math.random() < .5){
+    const firstTenths =
+      randomInteger(12,99);
+
+    const secondTenths =
+      randomInteger(11,89);
+
+    if(
+      firstTenths % 10 +
+      secondTenths % 10 <
+      10
+    ){
+      return generateLevel2();
+    }
+
+    const first =
+      firstTenths / 10;
+
+    const second =
+      secondTenths / 10;
+
+    return numberQuestion(
+      expression(
+        first,
+        "+",
+        second
+      ),
+
+      (
+        firstTenths +
+        secondTenths
+      ) / 10,
+
+      `2-plus-${firstTenths}-${secondTenths}`
+    );
+  }
+
+  const firstTenths =
+    randomInteger(25,199);
+
+  const secondTenths =
+    randomInteger(
+      11,
+      firstTenths - 1
+    );
+
+  if(
+    firstTenths % 10 >=
+    secondTenths % 10
+  ){
+    return generateLevel2();
+  }
+
+  const first =
+    firstTenths / 10;
+
+  const second =
+    secondTenths / 10;
+
+  return numberQuestion(
+    expression(
+      first,
+      "−",
+      second
+    ),
+
+    (
+      firstTenths -
+      secondTenths
+    ) / 10,
+
+    `2-min-${firstTenths}-${secondTenths}`
+  );
+}
+
+/* ==========================================
+   NIVEAU 3
+   HONDERDSTEN
+========================================== */
+
+function generateLevel3(){
+  const addition =
+    Math.random() < .5;
+
+  let firstHundredths =
+    randomInteger(100,999);
+
+  let secondHundredths =
+    randomInteger(10,899);
+
+  if(
+    !addition &&
+    secondHundredths >=
+    firstHundredths
+  ){
+    [
+      firstHundredths,
+      secondHundredths
+    ] = [
+      secondHundredths,
+      firstHundredths
+    ];
+  }
+
+  const first =
+    firstHundredths / 100;
+
+  const second =
+    secondHundredths / 100;
+
+  const answer =
+    addition
+      ? (
+          firstHundredths +
+          secondHundredths
+        ) / 100
+      : (
+          firstHundredths -
+          secondHundredths
+        ) / 100;
+
+  return numberQuestion(
+    expression(
+      first,
+      addition ? "+" : "−",
+      second
+    ),
+
+    answer,
+
+    `3-${addition}-${firstHundredths}-${secondHundredths}`
+  );
+}
+
+/* ==========================================
+   NIVEAU 4
+   ONGELIJK AANTAL DECIMALEN
+========================================== */
+
+function generateLevel4(){
+  const addition =
+    Math.random() < .5;
+
+  const type =
+    choose([
+      "tenth-hundredth",
+      "whole-hundredth",
+      "hundredth-tenth"
+    ]);
+
+  let firstHundredths;
+  let secondHundredths;
+
+  if(type === "tenth-hundredth"){
+    firstHundredths =
+      randomInteger(10,99) *
+      10;
+
+    secondHundredths =
+      randomInteger(1,99);
+
+  }else if(type === "whole-hundredth"){
+    firstHundredths =
+      randomInteger(2,15) *
+      100;
+
+    secondHundredths =
+      randomInteger(1,199);
+
+  }else{
+    firstHundredths =
+      randomInteger(100,999);
+
+    secondHundredths =
+      randomInteger(1,99) *
+      10;
+  }
+
+  if(
+    !addition &&
+    secondHundredths >=
+    firstHundredths
+  ){
+    [
+      firstHundredths,
+      secondHundredths
+    ] = [
+      secondHundredths,
+      firstHundredths
+    ];
+  }
+
+  const first =
+    firstHundredths / 100;
+
+  const second =
+    secondHundredths / 100;
+
+  const answer =
+    addition
+      ? (
+          firstHundredths +
+          secondHundredths
+        ) / 100
+      : (
+          firstHundredths -
+          secondHundredths
+        ) / 100;
+
+  return numberQuestion(
+    expression(
+      first,
+      addition ? "+" : "−",
+      second
+    ),
+
+    answer,
+
+    `4-${addition}-${firstHundredths}-${secondHundredths}`
+  );
+}
+
+/* ==========================================
+   NIVEAU 5
+   KOMMAGETAL, BREUK EN PERCENTAGE
+========================================== */
+
+const KNOWN_RELATIONS = [
+
+  {
+    n:1,
+    d:100,
+    decimal:.01,
+    percent:1
+  },
+
+  {
+    n:1,
+    d:20,
+    decimal:.05,
+    percent:5
+  },
+
+  {
+    n:1,
+    d:10,
+    decimal:.1,
+    percent:10
+  },
+
+  {
+    n:1,
+    d:5,
+    decimal:.2,
+    percent:20
+  },
+
+  {
+    n:1,
+    d:4,
+    decimal:.25,
+    percent:25
+  },
+
+  {
+    n:2,
+    d:5,
+    decimal:.4,
+    percent:40
+  },
+
+  {
+    n:1,
+    d:2,
+    decimal:.5,
+    percent:50
+  },
+
+  {
+    n:3,
+    d:5,
+    decimal:.6,
+    percent:60
+  },
+
+  {
+    n:3,
+    d:4,
+    decimal:.75,
+    percent:75
+  },
+
+  {
+    n:4,
+    d:5,
+    decimal:.8,
+    percent:80
+  }
+
+];
+
+function relationCard(
+  left,
+  right
+){
+  return (
+    `<div class="relationcard">` +
+
+      `<div class="relationline">` +
+
+        `<span>${left}</span>` +
+
+        `<span>=</span>` +
+
+        `<span>${right}</span>` +
+
+      `</div>` +
+
+    `</div>`
+  );
+}
+
+function generateLevel5(){
+  const relation =
+    choose(
+      KNOWN_RELATIONS
+    );
+
+  const type =
+    randomInteger(1,6);
+
+  const decimalText =
+    formatNumber(
+      relation.decimal
+    );
+
+  const fraction =
+    fractionHtml(
+      relation.n,
+      relation.d
+    );
+
+  /*
+    Type 1:
+    kommagetal naar percentage
+  */
+
+  if(type === 1){
+    return numberQuestion(
+      `<div class="smallquestion">` +
+        `Schrijf het kommagetal als percentage.` +
+      `</div>` +
+
+      relationCard(
+        decimalText,
+        "?"
+      ),
+
+      relation.percent,
+
+      `5-dec-pct-${relation.percent}`,
+
+      "%",
+
+      `${decimalText} = ${relation.percent}%`
+    );
+  }
+
+  /*
+    Type 2:
+    kommagetal naar breuk
+  */
+
+  if(type === 2){
+    return fractionQuestion(
+      `<div class="smallquestion">` +
+        `Schrijf het kommagetal als vereenvoudigde breuk.` +
+      `</div>` +
+
+      relationCard(
+        decimalText,
+        "?"
+      ),
+
+      relation.n,
+      relation.d,
+
+      `5-dec-frac-${relation.percent}`,
+
+      `${decimalText} = ${relation.n}/${relation.d}`
+    );
+  }
+
+  /*
+    Type 3:
+    breuk naar kommagetal
+  */
+
+  if(type === 3){
+    return numberQuestion(
+      `<div class="smallquestion">` +
+        `Schrijf de breuk als kommagetal.` +
+      `</div>` +
+
+      relationCard(
+        fraction,
+        "?"
+      ),
+
+      relation.decimal,
+
+      `5-frac-dec-${relation.percent}`,
+
+      "",
+
+      `${relation.n}/${relation.d} = ${decimalText}`
+    );
+  }
+
+  /*
+    Type 4:
+    percentage naar kommagetal
+  */
+
+  if(type === 4){
+    return numberQuestion(
+      `<div class="smallquestion">` +
+        `Schrijf het percentage als kommagetal.` +
+      `</div>` +
+
+      relationCard(
+        `${relation.percent}%`,
+        "?"
+      ),
+
+      relation.decimal,
+
+      `5-pct-dec-${relation.percent}`,
+
+      "",
+
+      `${relation.percent}% = ${decimalText}`
+    );
+  }
+
+  /*
+    Type 5:
+    percentage naar breuk
+  */
+
+  if(type === 5){
+    return fractionQuestion(
+      `<div class="smallquestion">` +
+        `Schrijf het percentage als vereenvoudigde breuk.` +
+      `</div>` +
+
+      relationCard(
+        `${relation.percent}%`,
+        "?"
+      ),
+
+      relation.n,
+      relation.d,
+
+      `5-pct-frac-${relation.percent}`,
+
+      `${relation.percent}% = ${relation.n}/${relation.d}`
+    );
+  }
+
+  /*
+    Type 6:
+    breuk naar percentage
+  */
+
+  return numberQuestion(
+    `<div class="smallquestion">` +
+      `Schrijf de breuk als percentage.` +
+    `</div>` +
+
+    relationCard(
+      fraction,
+      "?"
+    ),
+
+    relation.percent,
+
+    `5-frac-pct-${relation.percent}`,
+
+    "%",
+
+    `${relation.n}/${relation.d} = ${relation.percent}%`
+  );
+}
+
+function placeValueHtml(
+  value,
+  factor,
+  operator
+){
+  return (
+    `<div class="placecard">` +
+
+      `<div class="placeline">` +
+
+        `<div class="placebox">` +
+          `${formatNumber(value)}` +
+        `</div>` +
+
+        `<div class="arrow">` +
+          `${operator} ${factor}` +
+        `</div>` +
+
+        `<div class="placebox">` +
+          `?` +
+        `</div>` +
+
+      `</div>` +
+
+    `</div>`
+  );
+}
+
+/* ==========================================
+   NIVEAU 6
+   KEER 10, 100 EN 1000
+========================================== */
+
+function generateLevel6(){
+  const factor =
+    choose([
+      10,
+      100,
+      1000
+    ]);
+
+  const decimalPlaces =
+    choose([
+      1,
+      2,
+      3
+    ]);
+
+  const scaled =
+    randomInteger(1,999);
+
+  const value =
+    decimal(
+      scaled,
+      decimalPlaces
+    );
+
+  return numberQuestion(
+    `<div class="smallquestion">` +
+      `Vermenigvuldig met ${factor}.` +
+    `</div>` +
+
+    placeValueHtml(
+      value,
+      factor,
+      "×"
+    ),
+
+    value * factor,
+
+    `6-${scaled}-${decimalPlaces}-${factor}`
+  );
+}
+
+/* ==========================================
+   NIVEAU 7
+   DELEN DOOR 10, 100 EN 1000
+========================================== */
+
+function generateLevel7(){
+  const factor =
+    choose([
+      10,
+      100,
+      1000
+    ]);
+
+  const value =
+    choose([
+      randomInteger(
+        1,
+        999
+      ),
+
+      decimal(
+        randomInteger(10,9999),
+        1
+      ),
+
+      decimal(
+        randomInteger(10,9999),
+        2
+      )
+    ]);
+
+  return numberQuestion(
+    `<div class="smallquestion">` +
+      `Deel door ${factor}.` +
+    `</div>` +
+
+    placeValueHtml(
+      value,
+      factor,
+      ":"
+    ),
+
+    value / factor,
+
+    `7-${value}-${factor}`
+  );
+}
+
+/* ==========================================
+   NIVEAU 8
+   KOMMAGETAL KEER HEEL GETAL
+========================================== */
+
+function generateLevel8(){
+  const whole =
+    randomInteger(2,12);
+
+  const decimalPlaces =
+    choose([
+      1,
+      2
+    ]);
+
+  const scaled =
+    randomInteger(2,250);
+
+  const value =
+    decimal(
+      scaled,
+      decimalPlaces
+    );
+
+  return numberQuestion(
+    expression(
+      value,
+      "×",
+      whole
+    ),
+
+    value * whole,
+
+    `8-${scaled}-${decimalPlaces}-${whole}`
+  );
+}
+
+/* ==========================================
+   NIVEAU 9
+   KOMMAGETAL DELEN DOOR HEEL GETAL
+========================================== */
+
+function generateLevel9(){
+  const divisor =
+    randomInteger(2,10);
+
+  const decimalPlaces =
+    choose([
+      1,
+      2
+    ]);
+
+  const answerScaled =
+    randomInteger(2,250);
+
+  const answer =
+    decimal(
+      answerScaled,
+      decimalPlaces
+    );
+
+  const dividend =
+    answer *
+    divisor;
+
+  return numberQuestion(
+    expression(
+      dividend,
+      ":",
+      divisor
+    ),
+
+    answer,
+
+    `9-${answerScaled}-${decimalPlaces}-${divisor}`
+  );
+}
+
+/* ==========================================
+   NIVEAU 10
+   KOMMAGETAL KEER KOMMAGETAL
+========================================== */
+
+function generateLevel10(){
+  const firstTenths =
+    randomInteger(2,99);
+
+  const first =
+    firstTenths / 10;
+
+  const secondPlaces =
+    Math.random() < .5
+      ? 1
+      : 2;
+
+  const secondScaled =
+    randomInteger(2,99);
+
+  const second =
+    decimal(
+      secondScaled,
+      secondPlaces
+    );
+
+  return numberQuestion(
+    expression(
+      first,
+      "×",
+      second
+    ),
+
+    first * second,
+
+    `10-${firstTenths}-${secondScaled}-${secondPlaces}`
+  );
+}
+
+/* ==========================================
+   NIVEAU 11
+   KOMMAGETAL DELEN DOOR KOMMAGETAL
+========================================== */
+
+function generateLevel11(){
+  const divisor =
+    choose([
+      0.2,
+      0.25,
+      0.4,
+      0.5,
+      0.6,
+      0.8,
+      1.2,
+      1.25,
+      1.4,
+      1.5,
+      2.5
+    ]);
+
+  const answer =
+    choose([
+      0.5,
+      0.75,
+      1.2,
+      1.5,
+      2,
+      2.5,
+      3,
+      4,
+      5,
+      6,
+      8,
+      10
+    ]);
+
+  const dividend =
+    divisor *
+    answer;
+
+  return numberQuestion(
+    expression(
+      dividend,
+      ":",
+      divisor
+    ),
+
+    answer,
+
+    `11-${dividend}-${divisor}`
+  );
+}
+
+function roundTo(
+  value,
+  decimalPlaces
+){
+  const factor =
+    10 ** decimalPlaces;
+
+  return (
+    Math.round(
+      (
+        value +
+        Number.EPSILON
+      ) *
+      factor
+    ) /
+    factor
+  );
+}
+
+/* ==========================================
+   NIVEAU 12
+   AFRONDEN
+========================================== */
+
+function generateLevel12(){
+  const target =
+    choose([
+      0,
+      1,
+      2
+    ]);
+
+  let value;
+
+  if(target === 0){
+    value =
+      decimal(
+        randomInteger(101,9999),
+        2
+      );
+
+  }else if(target === 1){
+    value =
+      decimal(
+        randomInteger(1001,99999),
+        2
+      );
+
+  }else{
+    value =
+      decimal(
+        randomInteger(10001,999999),
+        3
+      );
+  }
+
+  const targetText =
+    target === 0
+      ? "hele getallen"
+      : target === 1
+        ? "tienden"
+        : "honderdsten";
+
+  return numberQuestion(
+    `<div class="smallquestion">` +
+      `Rond af op ${targetText}.` +
+    `</div>` +
+
+    `<div class="big">` +
+      `${formatNumber(value)} → ?` +
+    `</div>`,
+
+    roundTo(
+      value,
+      target
+    ),
+
+    `12-${value}-${target}`
+  );
+}
+
+const generators = [
+  generateLevel1,
+  generateLevel2,
+  generateLevel3,
+  generateLevel4,
+  generateLevel5,
+  generateLevel6,
+  generateLevel7,
+  generateLevel8,
+  generateLevel9,
+  generateLevel10,
+  generateLevel11,
+  generateLevel12
+];
+
+function buildRound(currentLevel){
+  const list =
+    [];
+
+  const usedKeys =
+    new Set();
+
+  let guard =
+    0;
+
+  while(
+    list.length < ROUND_SIZE &&
+    guard++ < 500
+  ){
+    const item =
+      generators[currentLevel]();
+
+    if(
+      !usedKeys.has(
+        item.key
+      )
+    ){
+      usedKeys.add(
+        item.key
+      );
+
+      list.push(
+        item
+      );
+    }
+  }
+
+  while(
+    list.length <
+    ROUND_SIZE
+  ){
+    list.push(
+      generators[currentLevel]()
+    );
+  }
+
+  return list;
+}
+
+function validateAnswer(
+  item,
+  raw
+){
+  if(item.type === "fraction"){
+    const fraction =
+      parseFraction(raw);
+
+    if(!fraction){
+      return {
+        valid:false,
+        correct:false,
+
+        message:
+          "Typ een breuk met een schuine streep, bijvoorbeeld 1/2."
+      };
+    }
+
+    return {
+      valid:true,
+
+      correct:
+        fraction.numerator ===
+        item.numerator &&
+        fraction.denominator ===
+        item.denominator
+    };
+  }
+
+  const number =
+    parseNumber(raw);
+
+  if(number === null){
+    return {
+      valid:false,
+      correct:false,
+
+      message:
+        "Typ alleen een getal, bijvoorbeeld 2,5 of 0,75."
+    };
+  }
+
+  return {
+    valid:true,
+
+    correct:
+      equalNumbers(
+        number,
+        item.expected
+      )
+  };
+}
+
+function startRound(){
+  if(!ready){
+    return;
+  }
+
+  const currentLevel =
+    validLevel(
+      data.levels.kommagetallen
+    );
+
+  questions =
+    buildRound(
+      currentLevel
+    );
+
+  questionIndex =
+    0;
+
+  correctCount =
+    0;
+
+  checked =
+    false;
+
+  document
+    .getElementById("intro")
+    .classList.add("hidden");
+
+  document
+    .getElementById("resultPanel")
+    .classList.add("hidden");
+
+  document
+    .getElementById("game")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("instruction")
+    .textContent =
+      LEVELS[currentLevel][2];
+
+  showQuestion();
+}
+
+function showQuestion(){
+  const item =
+    questions[
+      questionIndex
+    ];
+
+  checked =
+    false;
+
+  document
+    .getElementById("counter")
+    .textContent =
+      `Opgave ${questionIndex + 1} van ${ROUND_SIZE}`;
+
+  document
+    .getElementById("score")
+    .textContent =
+      `${correctCount} goed`;
+
+  document
+    .getElementById("progress")
+    .style.width =
+      `${questionIndex / ROUND_SIZE * 100}%`;
+
+  document
+    .getElementById("question")
+    .innerHTML =
+      item.html;
+
+  const feedback =
+    document.getElementById("feedback");
+
+  feedback.textContent =
+    "";
+
+  feedback.className =
+    "feedback";
+
+  const input =
+    document.getElementById("input");
+
+  input.value =
+    "";
+
+  input.disabled =
+    false;
+
+  input.placeholder =
+    item.placeholder ||
+    "Jouw antwoord";
+
+  input.setAttribute(
+    "inputmode",
+    item.type === "fraction"
+      ? "text"
+      : "decimal"
+  );
+
+  document
+    .getElementById("unit")
+    .textContent =
+      item.unit ||
+      "";
+
+  document
+    .getElementById("action")
+    .textContent =
+      "Controleer";
+
+  input.focus();
+}
+
+function checkAnswer(){
+  if(checked){
+    nextQuestion();
+    return;
+  }
+
+  const item =
+    questions[
+      questionIndex
+    ];
+
+  const input =
+    document.getElementById("input");
+
+  const result =
+    validateAnswer(
+      item,
+      input.value
+    );
+
+  const feedback =
+    document.getElementById("feedback");
+
+  if(!result.valid){
+    feedback.textContent =
+      result.message;
+
+    feedback.className =
+      "feedback hint";
+
+    input.focus();
+
+    return;
+  }
+
+  checked =
+    true;
+
+  input.disabled =
+    true;
+
+  if(result.correct){
+    correctCount++;
+
+    feedback.textContent =
+      "Goed!";
+
+    feedback.className =
+      "feedback good";
+
+  }else{
+    feedback.textContent =
+      `Niet goed. Het juiste antwoord is ` +
+      `${item.answerText}` +
+      `${
+        item.unit
+          ? " " + item.unit
+          : ""
+      }.` +
+      `${
+        item.explanation
+          ? " " + item.explanation + "."
+          : ""
+      }`;
+
+    feedback.className =
+      "feedback wrong";
+  }
+
+  document
+    .getElementById("score")
+    .textContent =
+      `${correctCount} goed`;
+
+  document
+    .getElementById("progress")
+    .style.width =
+      `${(questionIndex + 1) / ROUND_SIZE * 100}%`;
+
+  document
+    .getElementById("action")
+    .textContent =
+      questionIndex === ROUND_SIZE - 1
+        ? "Bekijk resultaat"
+        : "Volgende";
+}
+
+function nextQuestion(){
+  questionIndex++;
+
+  if(
+    questionIndex >=
+    ROUND_SIZE
+  ){
+    finishRound();
+
+  }else{
+    showQuestion();
+  }
+}
+
+async function finishRound(){
+  document
+    .getElementById("game")
+    .classList.add("hidden");
+
+  document
+    .getElementById("resultPanel")
+    .classList.remove("hidden");
+
+  const passed =
+    correctCount >=
+    PASS_SCORE;
+
+  const percentage =
+    Math.round(
+      correctCount /
+      ROUND_SIZE *
+      100
+    );
+
+  const oldLevel =
+    validLevel(
+      data.levels.kommagetallen
+    );
+
+  let attempts = [
+    ...data.attempts.kommagetallen,
+    passed
+  ].slice(-5);
+
+  let advanced =
+    false;
+
+  let completed =
+    false;
+
+  if(
+    passedCount(attempts) >=
+    3
+  ){
+    if(
+      oldLevel <
+      LEVELS.length - 1
+    ){
+      data.levels.kommagetallen =
+        oldLevel + 1;
+
+      attempts =
+        [];
+
+      advanced =
+        true;
+
+    }else{
+      completed =
+        true;
+    }
+  }
+
+  data.attempts.kommagetallen =
+    attempts;
+
+  setLocalData(data);
+  render();
+
+  document
+    .getElementById("resultScore")
+    .textContent =
+      `${correctCount}/${ROUND_SIZE}`;
+
+  document
+    .getElementById("resultStars")
+    .textContent =
+      stars(attempts);
+
+  if(advanced){
+    document
+      .getElementById("resultTitle")
+      .textContent =
+        "Niveau behaald! 🎉";
+
+    document
+      .getElementById("resultText")
+      .textContent =
+        `Je had ${correctCount} van de ${ROUND_SIZE} goed. ` +
+        `Je gaat verder met niveau ${oldLevel + 2}: ` +
+        `${LEVELS[oldLevel + 1][0]}.`;
+
+  }else if(completed){
+    document
+      .getElementById("resultTitle")
+      .textContent =
+        "Alle niveaus behaald! 🎉";
+
+    document
+      .getElementById("resultText")
+      .textContent =
+        `Je had ${correctCount} van de ${ROUND_SIZE} goed ` +
+        `en hebt alle niveaus afgerond.`;
+
+  }else if(passed){
+    document
+      .getElementById("resultTitle")
+      .textContent =
+        "Ronde behaald! ✅";
+
+    document
+      .getElementById("resultText")
+      .textContent =
+        `Je had ${correctCount} van de ${ROUND_SIZE} goed. ` +
+        `Deze ronde telt mee.`;
+
+  }else{
+    document
+      .getElementById("resultTitle")
+      .textContent =
+        "Blijf oefenen";
+
+    document
+      .getElementById("resultText")
+      .textContent =
+        `Je had ${correctCount} van de ${ROUND_SIZE} goed. ` +
+        `Je hebt minimaal ${PASS_SCORE} goede antwoorden nodig.`;
+  }
+
+  const saveStatus =
+    document.getElementById("saveStatus");
+
+  saveStatus.textContent =
+    "Voortgang opslaan…";
+
+  try{
+    const response =
+      await setSheets(
+        data,
+        percentage
+      );
+
+    if(
+      !response ||
+      response.ok !== true
+    ){
+      throw new Error(
+        response?.error ||
+        "Opslaan mislukt"
+      );
+    }
+
+    saveStatus.textContent =
+      "Voortgang opgeslagen in Google Sheets ✅";
+
+  }catch(error){
+    saveStatus.textContent =
+      "Google Sheets was niet bereikbaar. " +
+      "De voortgang staat wel lokaal opgeslagen.";
+  }
+}
+
+document
+  .getElementById("start")
+  .onclick =
+    startRound;
+
+document
+  .getElementById("again")
+  .onclick =
+    startRound;
+
+document
+  .getElementById("action")
+  .onclick =
+    checkAnswer;
+
+document
+  .getElementById("input")
+  .onkeydown =
+    event => {
+      if(event.key === "Enter"){
+        checkAnswer();
+      }
+    };
+
+loadData();
+</script>
+
+</body>
+</html>
