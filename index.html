@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Rekenen bovenbouw</title>
+
+  <style>
+    body{
+      font-family:system-ui,sans-serif;
+      background:#f4f6ff;
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:24px;
+      box-sizing:border-box;
+    }
+
+    .box{
+      background:#fff;
+      padding:2.2rem;
+      border-radius:1.8rem;
+      box-shadow:0 10px 30px rgba(0,0,0,.08);
+      max-width:560px;
+      width:100%;
+      text-align:center;
+    }
+
+    h1{
+      margin:0 0 .4rem;
+      font-size:2.2rem;
+    }
+
+    .sub{
+      margin:0 0 1.4rem;
+      color:#555;
+      font-size:1.05rem;
+    }
+
+    select,
+    input{
+      width:100%;
+      font-size:1.1rem;
+      padding:1rem 1.1rem;
+      border-radius:1.1rem;
+      border:2px solid #cfd3ff;
+      outline:none;
+      background:#fff;
+      box-sizing:border-box;
+      margin-bottom:.9rem;
+    }
+
+    select:focus,
+    input:focus{
+      border-color:#4f46e5;
+      box-shadow:0 0 0 4px rgba(79,70,229,.15);
+    }
+
+    button{
+      margin-top:.4rem;
+      padding:1rem 1.4rem;
+      border:none;
+      border-radius:999px;
+      background:#4f46e5;
+      color:#fff;
+      font-weight:900;
+      font-size:1rem;
+      cursor:pointer;
+      min-width:160px;
+    }
+
+    button:hover:not(:disabled){
+      background:#4338ca;
+    }
+
+    button:disabled{
+      background:#b9b9c7;
+      cursor:default;
+    }
+
+    .status{
+      margin-top:.9rem;
+      color:#555;
+      font-size:.95rem;
+      min-height:1.4rem;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="box">
+    <h1>Rekenen bovenbouw</h1>
+
+    <p class="sub">
+      Kies je klas en log in met je naam en code
+    </p>
+
+    <select id="classSelect" aria-label="Kies je klas">
+      <option value="">Kies je klas</option>
+
+      <option value="LianneLaura">LianneLaura</option>
+      <option value="MetteJur">MetteJur</option>
+      <option value="Jochem">Jochem</option>
+      <option value="JaraMette">JaraMette</option>
+      <option value="NatashaAnoek">NatashaAnoek</option>
+      <option value="SanneSander">SanneSander</option>
+      <option value="AnoekThijs">AnoekThijs</option>
+      <option value="Adne">Adne</option>
+      <option value="Stefan">Stefan</option>
+      <option value="KarinMirjam">KarinMirjam</option>
+      <option value="FionaMieke">FionaMieke</option>
+      <option value="Mike">Mike</option>
+      <option value="SandraJoris">SandraJoris</option>
+    </select>
+
+    <select
+      id="studentName"
+      aria-label="Kies je naam"
+      disabled
+    >
+      <option value="">Kies eerst je klas</option>
+    </select>
+
+    <input
+      id="studentCode"
+      type="password"
+      placeholder="Jouw code"
+      inputmode="numeric"
+      autocomplete="off"
+      aria-label="Vul je code in"
+    >
+
+    <button id="loginBtn" type="button">
+      Inloggen
+    </button>
+
+    <div
+      class="status"
+      id="statusMsg"
+      aria-live="polite"
+    >
+      Nog niet ingelogd.
+    </div>
+  </main>
+
+<script>
+/*
+  Vervang dit later door de NIEUWE web-app-URL
+  van het Apps Script van Rekenen bovenbouw.
+*/
+const SHEETS_EXEC_URL =
+  "PLAK_HIER_DE_NIEUWE_APPS_SCRIPT_URL";
+
+/*
+  Aparte opslagcodes voor Rekenen bovenbouw.
+
+  Gebruik hier niet de opslagcodes van de bestaande rekenapp.
+  Beide websites kunnen namelijk dezelfde localStorage delen.
+*/
+const STORAGE_CURRENT =
+  "rekenen_bovenbouw_current_student_v1";
+
+const STORAGE_CLASS =
+  "rekenen_bovenbouw_current_class_v1";
+
+const STORAGE_CODE =
+  "rekenen_bovenbouw_current_code_v1";
+
+const classSelect =
+  document.getElementById("classSelect");
+
+const studentName =
+  document.getElementById("studentName");
+
+const studentCode =
+  document.getElementById("studentCode");
+
+const loginBtn =
+  document.getElementById("loginBtn");
+
+const statusMsg =
+  document.getElementById("statusMsg");
+
+let jsonpSequence = 0;
+
+/*
+  Controleert of de nieuwe Apps Script-URL al is ingevuld.
+*/
+function apiIsIngesteld(){
+  return (
+    SHEETS_EXEC_URL.startsWith("https://script.google.com/") &&
+    SHEETS_EXEC_URL.includes("/exec")
+  );
+}
+
+/*
+  Voert een JSONP-aanroep uit.
+
+  JSONP gebruiken we omdat de website op GitHub Pages staat
+  en de gegevens via Google Apps Script worden geladen.
+*/
+function jsonp(url){
+  return new Promise((resolve, reject) => {
+    const callbackNaam =
+      "__bovenbouwCallback_" +
+      (++jsonpSequence) +
+      "_" +
+      Date.now();
+
+    const script =
+      document.createElement("script");
+
+    const cleanup = () => {
+      try{
+        delete window[callbackNaam];
+      }catch(error){
+        // Geen actie nodig.
+      }
+
+      script.remove();
+    };
+
+    window[callbackNaam] = (data) => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("JSONP-aanroep mislukt."));
+    };
+
+    const scheidingsteken =
+      url.includes("?") ? "&" : "?";
+
+    script.src =
+      url +
+      scheidingsteken +
+      "callback=" +
+      encodeURIComponent(callbackNaam);
+
+    document.body.appendChild(script);
+  });
+}
+
+/*
+  Laadt alle leerlingnamen uit het gekozen klassenblad.
+*/
+async function laadNamen(klas){
+  if(!apiIsIngesteld()){
+    studentName.disabled = true;
+
+    studentName.innerHTML =
+      '<option value="">Apps Script nog niet gekoppeld</option>';
+
+    statusMsg.textContent =
+      "De nieuwe Apps Script-URL moet nog worden ingevuld.";
+
+    return;
+  }
+
+  studentName.disabled = true;
+
+  studentName.innerHTML =
+    '<option value="">Namen laden...</option>';
+
+  studentCode.value = "";
+
+  statusMsg.textContent =
+    "Namen laden...";
+
+  const url =
+    `${SHEETS_EXEC_URL}?action=students` +
+    `&klas=${encodeURIComponent(klas)}`;
+
+  try{
+    const resultaat =
+      await jsonp(url);
+
+    studentName.innerHTML =
+      '<option value="">Kies je naam</option>';
+
+    if(
+      !resultaat ||
+      resultaat.ok !== true ||
+      !Array.isArray(resultaat.students)
+    ){
+      studentName.innerHTML =
+        '<option value="">Geen namen gevonden</option>';
+
+      statusMsg.textContent =
+        "Geen leerlingen gevonden in deze klas.";
+
+      return;
+    }
+
+    resultaat.students.forEach((leerling) => {
+      const naam =
+        typeof leerling === "string"
+          ? leerling
+          : leerling.naam;
+
+      if(!naam){
+        return;
+      }
+
+      const option =
+        document.createElement("option");
+
+      option.value = naam;
+      option.textContent = naam;
+
+      studentName.appendChild(option);
+    });
+
+    studentName.disabled = false;
+
+    statusMsg.textContent =
+      "Kies je naam en vul je code in.";
+
+  }catch(error){
+    studentName.innerHTML =
+      '<option value="">Namen laden mislukt</option>';
+
+    statusMsg.textContent =
+      "De namen konden niet worden geladen.";
+  }
+}
+
+/*
+  Wanneer een klas wordt gekozen, worden de namen geladen.
+*/
+classSelect.addEventListener("change", () => {
+  const klas =
+    classSelect.value.trim();
+
+  studentName.disabled = true;
+
+  studentName.innerHTML =
+    '<option value="">Kies eerst je klas</option>';
+
+  studentCode.value = "";
+
+  if(klas){
+    laadNamen(klas);
+  }else{
+    statusMsg.textContent =
+      "Nog niet ingelogd.";
+  }
+});
+
+/*
+  Controleert de naam en code via Google Apps Script.
+*/
+async function loginStudent(klas, naam, code){
+  const url =
+    `${SHEETS_EXEC_URL}?action=login` +
+    `&klas=${encodeURIComponent(klas)}` +
+    `&naam=${encodeURIComponent(naam)}` +
+    `&code=${encodeURIComponent(code)}`;
+
+  return await jsonp(url);
+}
+
+/*
+  Logt de leerling in en opent daarna het menu.
+*/
+async function login(){
+  if(!apiIsIngesteld()){
+    statusMsg.textContent =
+      "De nieuwe Apps Script-URL moet nog worden ingevuld.";
+
+    return;
+  }
+
+  const klas =
+    classSelect.value.trim();
+
+  const naam =
+    studentName.value.trim();
+
+  const code =
+    studentCode.value.trim();
+
+  if(!klas || !naam || !code){
+    statusMsg.textContent =
+      "Kies je klas en naam en vul je code in.";
+
+    return;
+  }
+
+  loginBtn.disabled = true;
+  statusMsg.textContent = "Inloggen...";
+
+  try{
+    const resultaat =
+      await loginStudent(klas, naam, code);
+
+    if(resultaat && resultaat.ok === true){
+      localStorage.setItem(
+        STORAGE_CLASS,
+        klas
+      );
+
+      localStorage.setItem(
+        STORAGE_CURRENT,
+        naam
+      );
+
+      localStorage.setItem(
+        STORAGE_CODE,
+        code
+      );
+
+      statusMsg.textContent =
+        "Inloggen gelukt ✅";
+
+      window.location.href =
+        "menu.html";
+
+      return;
+    }
+
+    statusMsg.textContent =
+      resultaat && resultaat.error
+        ? resultaat.error
+        : "Naam of code klopt niet.";
+
+  }catch(error){
+    statusMsg.textContent =
+      "Inloggen mislukt. Probeer het opnieuw.";
+
+  }finally{
+    loginBtn.disabled = false;
+  }
+}
+
+loginBtn.addEventListener(
+  "click",
+  login
+);
+
+studentCode.addEventListener(
+  "keydown",
+  (event) => {
+    if(event.key === "Enter"){
+      login();
+    }
+  }
+);
+</script>
+</body>
+</html>
